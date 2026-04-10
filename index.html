@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>QQ音乐金牌制作人：从零开始的偶像企划</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--ag:#CCFF00;--ap:#FF2D78;--au:#A855F7;--ac:#00F5FF;--ao:#FF6B00;--ay:#FFE500;--bg:#0A0A0A;--tp:#F5F5F5;--ts:#888}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans SC',-apple-system,sans-serif;background:var(--bg);color:var(--tp);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--ag);border-radius:2px}
+@keyframes su{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gl{0%{text-shadow:2px 0 var(--ap),-2px 0 var(--ac)}50%{text-shadow:-2px 2px var(--ap),2px -2px var(--ac)}100%{text-shadow:2px 0 var(--ap),-2px 0 var(--ac)}}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes bg{0%,100%{border-color:var(--ag);box-shadow:0 0 8px #ccff004d}33%{border-color:var(--ap);box-shadow:0 0 8px #ff2d784d}66%{border-color:var(--ac);box-shadow:0 0 8px #00f5ff4d}}
+@keyframes cf{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.ce{animation:su .5s cubic-bezier(.16,1,.3,1) both}
+.gt{animation:gl .3s ease infinite}
+.no{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")}
+#app{min-height:100dvh;position:relative;transition:opacity .3s}
+.page{min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:70px 18px 40px;position:relative}
+.page.hs{padding-bottom:145px}.page.intro{justify-content:center;padding:40px 18px}
+.inn{width:100%;max-width:420px}
+.btn{width:100%;text-align:left;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);border-radius:13px;padding:11px 13px;cursor:pointer;transition:all .3s;color:var(--tp);position:relative;overflow:hidden;display:flex;gap:9px;align-items:flex-start;font-family:inherit;font-size:13px}
+.btn:hover,.btn:active{background:rgba(255,255,255,.06);border-color:var(--ag);transform:translateY(-2px);box-shadow:0 0 20px rgba(204,255,0,.08)}
+.btn .be{font-size:20px;flex-shrink:0;line-height:1}.btn .bt{font-weight:900;font-size:13px;margin-bottom:2px;color:var(--tp)}
+.btn:hover .bt{color:var(--ag)}.btn .bd{font-size:11px;color:var(--ts);line-height:1.4}
+.btn .bg2{font-size:10px;margin-top:4px;font-style:italic;opacity:.8;color:var(--ag)}
+.choices{display:flex;flex-direction:column;gap:7px}
+.pbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.9);backdrop-filter:blur(10px)}
+.pfill{height:3px;background:linear-gradient(90deg,var(--ag),var(--ac),var(--ap));transition:width .6s cubic-bezier(.16,1,.3,1);box-shadow:0 0 15px #ccff0080}
+.pinfo{display:flex;justify-content:space-between;padding:5px 16px;font-size:9px;letter-spacing:2px;color:var(--ts)}
+.sbar{display:flex;gap:5px;padding:3px 0;width:100%}
+.si{flex:1;background:rgba(255,255,255,.04);border-radius:10px;padding:4px 3px;text-align:center;border:1px solid rgba(255,255,255,.06)}
+.si .sv{font-weight:900}.si .sl{font-size:8px;color:var(--ts);letter-spacing:1px}
+.bstats{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.92);backdrop-filter:blur(10px);padding:1px 12px 3px;border-top:1px solid rgba(255,255,255,.05)}
+.bsi{max-width:420px;margin:0 auto}
+.ecard{background:rgba(255,255,255,.03);border-radius:16px;padding:16px 14px;margin-bottom:12px;border:1px solid rgba(255,255,255,.06);text-align:center}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.95);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 18px;z-index:200;backdrop-filter:blur(20px);display:flex;gap:14px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+a.cta{display:block;width:100%;background:linear-gradient(135deg,var(--ag),var(--ac));color:#000;padding:14px;border-radius:100px;font-size:14px;font-weight:900;text-align:center;text-decoration:none;letter-spacing:1px;box-shadow:0 0 30px #ccff0040;font-family:inherit}
+.nbadge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,45,120,.1);padding:4px 12px;border-radius:100px;margin-bottom:8px;font-size:10px;color:var(--ap);font-weight:700;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="no"></div>
+<div id="app"></div>
+<script>
+var G={gender:null,name:"",stats:{f:0,p:0,c:0},screen:"intro",evts1:[],evts2:[],evts3:[],curEvt:0,evtResults:[],choices:{identity:"",strategy:"",training:"",style:"",debut:"",fanops:"",year2:"",year3:""},bond:0};
+
+var IDS=[
+{id:"rich",e:"💰",t:"追星成魔の富二代",d:"为偶像花了两千万应援，现在决定自己造一个。",g:"「用爱发电？不，用钱发电。」",s:{f:9,p:5,c:36}},
+{id:"tech",e:"🤖",t:"大厂离职の前高管",d:"把偶像产业当互联网项目跑。DAU、ROI张口就来。",g:"「我的KPI里没有感情这栏。」",s:{f:5,p:18,c:27}},
+{id:"poor",e:"🫠",t:"全靠贷款の纯情创业者",d:"信用卡刷爆三张，睡公司地板。生日只能送手写信。",g:"「今天的泡面，是梦想的味道。」",s:{f:27,p:9,c:0}},
+{id:"coal",e:"⛏️",t:"手握重金の传统资本",d:"矿上赚了几个亿，审美停留在05年春晚。",g:"「来来来，小张给王总唱一个！」",s:{f:0,p:22,c:40}},
+{id:"ex",e:"🎤",t:"选秀落选の前练习生",d:"差一票没出道，现在送别人上那个舞台。",g:"「我没站上的舞台，你们替我站。」",s:{f:22,p:5,c:9}}
+];
+var STRATS=[
+{id:"a",e:"🎸",t:"地下Livehouse刷脸起家",d:"100人小场子，一张票一个粉丝慢慢攒。",g:"死忠粉是这样炼成的",s:{f:25,p:-9,c:-9}},
+{id:"b",e:"🔥",t:"重金砸热搜+空降S级舞台",d:"出道当天12个热搜，粉丝没建站就有黑粉了。",g:"#这个团到底谁在听#",s:{f:-9,p:27,c:-14}},
+{id:"c",e:"⚔️",t:"全员丢进选秀综艺",d:"疯狂虐粉，成团夜轰动全网，但要和平台分约。",g:"「你的一票，决定谁能留下来」",s:{f:18,p:18,c:-5}},
+{id:"d",e:"📱",t:"拍土味短剧先火",d:"黑红路线，下沉市场无敌，但逼格全无。",g:"播放5000万！评论区全在骂",s:{f:9,p:22,c:9}},
+{id:"e",e:"🌏",t:"海外练习+倒灌国内",d:"先去海外学两年刀群舞再杀回来。",g:"「地下室里，他们每天练16小时」",s:{f:9,p:18,c:-15}}
+];
+var TRAINS=[
+{id:"a",e:"🏫",t:"封闭式长期养成（3-5年）",d:"从十几岁开始封闭训练，才艺+文化+人格。粉丝从小看着长大，亲妈粉buff叠满。",g:"「我看着他从变声期唱到了万人体育馆」",s:{f:27,p:0,c:-10}},
+{id:"b",e:"⚡",t:"3个月速成魔鬼训练营",d:"声乐+舞蹈+表情管理，高强度填鸭。出道快底子薄。",g:"「三个月素人到偶像，代价是每天睡4小时」",s:{f:0,p:14,c:9}},
+{id:"c",e:"🌿",t:"野生放养型（边演边学）",d:"不搞集训直接实战。全程真人秀记录。",g:"「他们的成长，粉丝全程见证」",s:{f:18,p:9,c:0}},
+{id:"d",e:"🎓",t:"科班学院派路线",d:"全员音乐学院在读/毕业，功底扎实。",g:"「他们真会唱，但上综艺像在上课」",s:{f:5,p:22,c:-9}},
+{id:"e",e:"🎭",t:"跨界混搭海选",d:"从演员、运动员、网红、素人中选。话题度天然高。",g:"「前体操冠军+说唱歌手+美妆博主=？」",s:{f:9,p:22,c:-9}}
+];
+var MUSICS=[
+{id:"a",e:"🎤",t:"说唱厂牌路线",d:"主打Hip-Hop/Trap。",g:"「Real recognize real.」",s:{f:14,p:-5,c:5}},
+{id:"b",e:"🍬",t:"甜系偶像流行曲",d:"糖分爆表的混血风，振付舞蹈+应援色。",g:"「比心～爱你们每一个人！」",s:{f:22,p:14,c:0}},
+{id:"c",e:"🎸",t:"乐队摇滚路线",d:"全员真乐器不对口型。",g:"「不需要伴奏带，给个电就行」",s:{f:18,p:9,c:-5}},
+{id:"d",e:"🎧",t:"电子赛博朋克概念",d:"Auto-Tune+合成器+概念MV。",g:"「下张专辑主题：量子纠缠」",s:{f:9,p:22,c:-5}},
+{id:"e",e:"🏮",t:"国风中国风",d:"古筝+笛子+Trap beat。官媒点赞。",g:"央视新闻转发了你们的MV",s:{f:9,p:27,c:5}}
+];
+var DEBUTS=[
+{id:"a",e:"💿",t:"先发数字单曲试水",d:"平台独家首发，成本低风险低。",g:"「首日播放8万。评论区：这谁？」",s:{f:9,p:14,c:9}},
+{id:"b",e:"📀",t:"直接出完整专辑",d:"12首歌展示完整概念。成本巨高。",g:"「要么封神，要么血亏」",s:{f:18,p:22,c:-5}},
+{id:"c",e:"🎪",t:"出道即开演唱会",d:"2000人场馆票价99，赔本赚吆喝。",g:"「后排空200座，但前排粉丝哭了」",s:{f:32,p:9,c:5}},
+{id:"d",e:"🎬",t:"重金拍电影级MV",d:"知名导演拍5分钟，成本500万。",g:"「#MV好看歌难听#」",s:{f:5,p:32,c:-12}}
+];
+var FANS=[
+{id:"a",e:"💌",t:"会员制粉丝社区",d:"专属APP月费制。独家花絮+语音。",g:"「月费29.9，包含哥哥/姐姐说晚安」",s:{f:22,p:-14,c:18}},
+{id:"b",e:"📱",t:"日更九宫格营业型",d:"天天自拍日常互动，人设立稳。",g:"「第48天，主唱发了第48张猫照」",s:{f:14,p:14,c:0}},
+{id:"c",e:"🎥",t:"长视频内容矩阵",d:"团综+练习室vlog+挑战视频。",g:"「练习室视频800万播放」",s:{f:14,p:18,c:-5}},
+{id:"d",e:"🔮",t:"神秘高冷极少营业",d:"一年只在演唱会见面。",g:"「上一条动态是73天前」",s:{f:-9,p:5,c:14}},
+{id:"e",e:"🎮",t:"粉丝共创投票决定一切",d:"歌名MV歌单全粉丝定。",g:"「粉丝投了首歌叫《我是你的小饼干》」",s:{f:22,p:0,c:-9}}
+];
+var Y2=[
+{id:"a",e:"🌍",t:"开启全国巡演",d:"15城每场5000人。",g:"「第12场，舞担差点晕倒」",s:{f:22,p:18,c:14}},
+{id:"b",e:"🎬",t:"全员转型影视",d:"接电视剧电影。",g:"「他的演技让导演气哭了」",s:{f:-5,p:36,c:22}},
+{id:"c",e:"👥",t:"推子团/小分队",d:"按风格拆2-3个分队。",g:"「A队上春晚，B队团综，C队…直播带货」",s:{f:14,p:14,c:9}},
+{id:"d",e:"🏢",t:"成立自己的厂牌",d:"开始招新练习生。",g:"「你有47个练习生，45个在摸鱼」",s:{f:9,p:27,c:-9}},
+{id:"e",e:"🏖️",t:"全员放假充电",d:"三个月假。有人进修有人消失了…",g:"「粉丝：他们是不是要解散？」",s:{f:-9,p:0,c:18}}
+];
+var Y3=[
+{id:"a",e:"✈️",t:"冲击海外市场",d:"进军东南亚+欧美。成了就是国际巨星。",g:"「曼谷接机粉丝比首都机场还多」",s:{f:9,p:27,c:-10}},
+{id:"b",e:"🎮",t:"打造偶像IP宇宙",d:"出手游+动漫+虚拟偶像。品牌帝国。",g:"「手游流水比音乐收入高10倍」",s:{f:-5,p:14,c:32}},
+{id:"c",e:"👨‍🏫",t:"转型综艺导师",d:"让成员当选秀导师坐评委席。",g:"「当年淘汰他的导师，现在是他的后辈」",s:{f:0,p:32,c:9}},
+{id:"d",e:"🎵",t:"回归独立音乐",d:"减少商业合作，专注做一张「神专」。",g:"「我们这张专辑，只为自己做」",s:{f:22,p:5,c:-15}},
+{id:"e",e:"🔥",t:"赌上一切办万人演唱会",d:"押上全部资金办一场万人体育馆演唱会。",g:"「这场演唱会，就是我们的最终审判」",s:{f:18,p:18,c:8}}
+];
+var EVTS=[
+{e:"📸",i:"🔥",t:"惊天大瓜！",d:"主舞被拍到和嫂子/姐夫深夜看电影。#XX塌房# 2小时8亿阅读。",ch:[{t:"发声明「剧本围读」+花钱压热搜",e:"💸",s:{f:-5,p:5,c:-7}},{t:"冷藏该成员铁腕治军",e:"❄️",s:{f:14,p:-14,c:0}},{t:"主动道歉+万字反省信",e:"😭",s:{f:5,p:14,c:2}}]},
+{e:"💥",i:"⚡",t:"队内霸凌罗生门！",d:"某成员凌晨3点微博秒删「我真的受够了」。0.5秒被疯传。",ch:[{t:"全员直播「相亲相爱一家人」",e:"🎭",s:{f:-14,p:14,c:2}},{t:"炒成「相爱相杀」大势CP",e:"💕",s:{f:22,p:-5,c:5}},{t:"被霸凌成员发vlog澄清",e:"🎥",s:{f:9,p:9,c:0}}]},
+{e:"🎵",i:"✨",t:"B面歌意外爆火！",d:"一首B-side被AI二创搞怪，抖音日播破2亿！",ch:[{t:"官方下场+推舞蹈挑战赛",e:"🕺",s:{f:14,p:27,c:14}},{t:"发律师函警告侵权",e:"📜",s:{f:-22,p:-14,c:5}},{t:"和AI创作者联名remix",e:"🤝",s:{f:18,p:22,c:9}}]},
+{e:"🌟",i:"💫",t:"C位想单飞！",d:"C位：「我觉得我可以solo了」。手里有别家offer。",ch:[{t:"含泪放手+培养替补",e:"👋",s:{f:-22,p:5,c:14}},{t:"加钱加资源不放人",e:"💰",s:{f:5,p:0,c:-15}},{t:"出联名曲做告别企划",e:"🎬",s:{f:14,p:22,c:0}}]},
+{e:"💔",i:"🧠",t:"成员心理健康危机！",d:"一位成员确诊中度抑郁症。医生建议休息半年。",ch:[{t:"立刻宣布暂休取消所有行程",e:"🏥",s:{f:27,p:22,c:-8}},{t:"对外说「身体不适」私下治疗",e:"🤫",s:{f:-5,p:5,c:0}},{t:"公开说明呼吁关注艺人心理健康",e:"📢",s:{f:22,p:32,c:2}}]},
+{e:"🤖",i:"🚨",t:"AI换脸危机！",d:"成员被AI换脸做不雅视频传播。情绪崩溃。",ch:[{t:"法律出击+心理辅导",e:"⚖️",s:{f:14,p:14,c:-7}},{t:"成员发声呼吁AI伦理",e:"📡",s:{f:18,p:27,c:2}},{t:"低调处理专注音乐",e:"🔇",s:{f:5,p:0,c:0}}]},
+{e:"🎲",i:"🤯",t:"热搜乌龙！",d:"和你团名一模一样的火锅店被查出地沟油。全网以为是你们的副业。",ch:[{t:"紧急澄清+请全网吃火锅",e:"🍲",s:{f:9,p:27,c:-7}},{t:"反向营销：官方开一家真的火锅店",e:"🔥",s:{f:14,p:36,c:-2}},{t:"无视等热搜自己凉",e:"🤷",s:{f:-5,p:9,c:0}}]},
+{e:"🎰",i:"🍀",t:"天降横财！",d:"三年前拍的广告BGM被某国际大片选中当配乐！版权费到账500万。",ch:[{t:"拿这笔钱做一张Dream Album",e:"💿",s:{f:18,p:14,c:27}},{t:"全团分红每人发奖金",e:"💰",s:{f:27,p:5,c:9}},{t:"投资房产当公司固定资产",e:"🏢",s:{f:0,p:0,c:45}}]},
+{e:"🦠",i:"😷",t:"突发停工！",d:"不可抗力。全行业停摆三个月。演唱会取消综艺停录商务暂停。",ch:[{t:"趁机做线上内容直播+线上演唱会",e:"📱",s:{f:22,p:18,c:5}},{t:"全员休息提升技能",e:"📚",s:{f:9,p:0,c:-11}},{t:"裁员缩减开支死扛",e:"✂️",s:{f:-14,p:-5,c:9}}]},
+{e:"🐕",i:"🐾",t:"成员养的狗上热搜了！",d:"主唱的柴犬「年糕」在团综里抢镜。#年糕好可爱#热搜第三。年糕超话粉丝比团还多。",ch:[{t:"给年糕开社交账号当团宠运营",e:"🐕",s:{f:14,p:27,c:5}},{t:"控制宠物出镜避免喧宾夺主",e:"🚫",s:{f:-5,p:-9,c:0}},{t:"和宠物品牌联名出周边",e:"🎁",s:{f:9,p:18,c:14}}]},
+{e:"👜",i:"💎",t:"商务番位大战！",d:"某奢侈品牌要选团代言人但只选一个。粉丝互撕。品牌说三天内决定否则换团。",ch:[{t:"坚持全团共进退",e:"🤝",s:{f:27,p:-9,c:2}},{t:"让人气最高的成员单独接",e:"🌟",s:{f:-18,p:18,c:18}},{t:"和品牌谈判拆成系列广告每人一期",e:"💼",s:{f:9,p:14,c:5}}]},
+{e:"🗣️",i:"💣",t:"离职助理爆料！",d:"前助理小红书发「在XX团工作的365天」提到成员不和和你的管理方式。评论区炸了。",ch:[{t:"拍团建纪录片真实画面反击",e:"🎬",s:{f:9,p:22,c:-2}},{t:"找律师起诉泄露商业机密",e:"⚖️",s:{f:5,p:-5,c:-7}},{t:"主动承认管理不足+公开整改",e:"🙇",s:{f:14,p:18,c:2}}]},
+{e:"📚",i:"🎓",t:"养成系成员要高考了！",d:"未成年成员马上高考！粉丝联名要求闭关学习但你有三个商务合同。",cond:{training:"a"},ch:[{t:"全力支持闭关学习违约金自己扛",e:"📖",s:{f:32,p:18,c:-8}},{t:"考前一周放假其他时间正常",e:"⚖️",s:{f:9,p:5,c:5}},{t:"边学边工作安排补课老师跟组",e:"🤹",s:{f:-14,p:-9,c:14}}]},
+{e:"👨‍👩‍👦",i:"📞",t:"成员父母来要人了！",d:"最小成员的妈妈直接打电话：「我孩子才17岁再不回来我去告你们！」#未成年偶像权益#上了热搜。",cond:{training:"a"},ch:[{t:"立刻安排回家一个月+承诺学业优先",e:"🏠",s:{f:18,p:14,c:-7}},{t:"请父母来公司参观展示培养计划",e:"🤝",s:{f:9,p:9,c:2}},{t:"签详细监护协议+给父母每月补贴",e:"💰",s:{f:-9,p:5,c:-11}}]},
+{e:"🎙️",i:"😬",t:"舞台划水质疑！",d:"直拍被放慢发现对口型！伴奏带AR被关掉现场一片车祸。",cond:{training:"b"},ch:[{t:"紧急安排线上清唱live回应",e:"🎤",s:{f:18,p:18,c:0}},{t:"发声明「正常表演辅助」",e:"📝",s:{f:-14,p:-18,c:3}},{t:"自嘲「被你们发现了明天苦练」",e:"😂",s:{f:14,p:14,c:0}}]},
+{e:"🎭",i:"🤢",t:"修音翻车现场！",d:"直播时未经修音的原声被全网听到。乐评人写了3000字分析。",cond:{training:"b"},ch:[{t:"紧急集训三个月+蜕变纪录片翻盘",e:"💪",s:{f:14,p:9,c:-7}},{t:"转型主打舞蹈和视觉",e:"🕺",s:{f:5,p:18,c:2}},{t:"直接发raw版live承认不足展示态度",e:"🎤",s:{f:22,p:14,c:0}}]},
+{e:"🗞️",i:"🖤",t:"对家恶意买黑通稿！",d:"一夜之间各大营销号同时发出黑料合集。真假参半越辟谣越热。",cond:{strategy:"b"},ch:[{t:"律师发函逐一起诉营销号",e:"⚖️",s:{f:9,p:9,c:-11}},{t:"买更多通稿反击+曝光对家",e:"💣",s:{f:14,p:-9,c:-7}},{t:"用新歌回应把黑料写成歌词",e:"🎵",s:{f:27,p:18,c:2}}]},
+{e:"💋",i:"💘",t:"恋情曝光！",d:"队长和某顶流约会被拍！有人在烧周边。",cond:{style:"b"},ch:[{t:"否认到底+拿出行程表",e:"🙅",s:{f:5,p:-14,c:2}},{t:"大方官宣「请大家祝福」",e:"💍",s:{f:-27,p:22,c:0}},{t:"不回应暗中准备新歌",e:"🤫",s:{f:-5,p:5,c:5}}]},
+{e:"📺",i:"🎬",t:"综艺名场面！",d:"成员被整蛊的反应截成表情包传遍全网！",cond:{strategy:"c"},ch:[{t:"综艺常驻+疯狂接通告",e:"🎪",s:{f:5,p:32,c:14}},{t:"只接高质量综艺",e:"🎯",s:{f:22,p:14,c:0}},{t:"全员团综主打团体笑点",e:"🤹",s:{f:14,p:22,c:5}}]},
+{e:"⚔️",i:"🔥",t:"粉圈大战爆发！",d:"你家粉丝和隔壁顶流因投票打起来了！站姐退圈三个。",cond:{fanops:"a"},ch:[{t:"官方呼吁理性追星",e:"🕊️",s:{f:-14,p:22,c:0}},{t:"暗中支持出征",e:"🏴",s:{f:22,p:-22,c:5}},{t:"趁乱发新歌抢热度",e:"🎵",s:{f:5,p:14,c:5}}]},
+{e:"😰",i:"🚫",t:"私生饭事件！",d:"私生饭潜入成员住所跟踪两周。成员不敢回家。",cond:{fanops:"a"},ch:[{t:"报警+搬家+升级安保",e:"🔒",s:{f:5,p:9,c:-11}},{t:"公开谴责+建反私生联盟",e:"📢",s:{f:14,p:22,c:-2}},{t:"低调处理",e:"🤫",s:{f:-5,p:0,c:-5}}]},
+{e:"😭",i:"📺",t:"成员直播情绪崩溃！",d:"一位成员直播突然哭了「我真的好累」。直播间从5万涨到50万。",cond:{fanops:"b"},ch:[{t:"立刻停工+全员放一周假",e:"🏥",s:{f:22,p:18,c:-11}},{t:"剪辑成感动物料趁热卖情怀",e:"📹",s:{f:-14,p:14,c:9}},{t:"安排心理辅导+发声明呼吁善待艺人",e:"💚",s:{f:18,p:27,c:-2}}]},
+{e:"🧴",i:"💸",t:"代言翻车！",d:"代言品牌被曝造假！不续约赔3000万。",cond:{identity:"coal"},ch:[{t:"壮士断腕解约！",e:"🔪",s:{f:22,p:14,c:-25}},{t:"假装没事等到期",e:"🙈",s:{f:-14,p:-5,c:5}},{t:"要求品牌整改变维权代言人",e:"📢",s:{f:14,p:27,c:5}}]},
+{e:"💸",i:"🏛️",t:"税务风波！",d:"自媒体爆料涉嫌阴阳合同。热搜写成偷税漏税。",cond:{identity:"coal"},ch:[{t:"配合调查+公开审计报告",e:"📊",s:{f:9,p:18,c:-7}},{t:"律师函+低调处理",e:"⚖️",s:{f:0,p:5,c:-2}},{t:"开直播展示纳税记录",e:"📱",s:{f:14,p:14,c:-2}}]},
+{e:"🏚️",i:"💀",t:"公司要倒闭了！",d:"连续三个月入不敷出。工资拖欠两个月。你的银行卡余额：237.5元。",cond:{identity:"poor"},ch:[{t:"卖掉车和房子all in最后一搏",e:"🔥",s:{f:14,p:0,c:-29}},{t:"找投资人融资出让30%股份",e:"🏦",s:{f:0,p:9,c:27}},{t:"坦白告诉成员实情一起决定",e:"🤝",s:{f:27,p:9,c:-2}}]},
+{e:"🇨🇳",i:"🏆",t:"官方点名表演！",d:"你们的歌被选为大型国际赛事表演曲目！",cond:{style:"e"},ch:[{t:"闭关苦练一个月完美演出",e:"🎯",s:{f:14,p:36,c:-2}},{t:"趁机出周边联名商业最大化",e:"💰",s:{f:5,p:22,c:22}},{t:"婉拒「我们还没准备好」",e:"🙏",s:{f:9,p:-9,c:5}}]},
+{e:"🎼",i:"⚠️",t:"抄袭风波！",d:"主打歌副歌和某海外歌曲高度相似！原作者INS发了「?」。",cond:{style:"e"},ch:[{t:"下架道歉+买原曲版权",e:"💰",s:{f:5,p:5,c:-15}},{t:"坚持巧合+音乐理论分析",e:"📊",s:{f:-9,p:-18,c:5}},{t:"请原作者feat.合作",e:"🤝",s:{f:14,p:22,c:-7}}]},
+{e:"🎪",i:"🚑",t:"演唱会事故！",d:"主唱从升降台摔下来了！视频传遍全网。",cond:{debut:"c"},ch:[{t:"终止演出+全额退票",e:"🏥",s:{f:22,p:22,c:-8}},{t:"带伤完成演出",e:"💪",s:{f:27,p:14,c:0}},{t:"其他成员轮流cover",e:"🤝",s:{f:27,p:5,c:2}}]},
+{e:"🎨",i:"🖼️",t:"视觉抄袭争议！",d:"新专辑封面被指和某国际艺术家作品高度相似。3小时5亿阅读。",cond:{debut:"d"},ch:[{t:"花重金买版权+全部重做视觉",e:"💰",s:{f:9,p:14,c:-20}},{t:"发声明强调创意撞车",e:"🙅",s:{f:-9,p:-18,c:5}},{t:"邀请原作者联名合作",e:"🤝",s:{f:14,p:27,c:-7}}]},
+{e:"👩‍👦",i:"📞",t:"父母催成员回老家！",d:"Rapper爸妈打来电话：你都25了隔壁小王孩子都会跑了。你表叔找了个银行的工作。Rapper有点心动。",cond:{training:"c"},ch:[{t:"尊重选择准备好替补方案",e:"👋",s:{f:-14,p:0,c:5}},{t:"亲自飞去老家和父母谈展示前景",e:"✈️",s:{f:9,p:5,c:-2}},{t:"给成员加薪+给父母安排家属探班日",e:"💰",s:{f:5,p:0,c:-7}}]},
+{e:"🃏",i:"🤖",t:"AI鬼畜大爆发！",d:"有人用你们素材做了AI鬼畜视频播放破亿。粉丝觉得被冒犯路人觉得好笑。",cond:{strategy:"d"},ch:[{t:"官方下场整活出联名鬼畜",e:"😂",s:{f:14,p:32,c:5}},{t:"发律师函维权全网下架",e:"⚖️",s:{f:9,p:-22,c:-2}},{t:"无视让子弹飞一会儿",e:"🤷",s:{f:0,p:9,c:0}}]},
+{e:"🌙",i:"💫",t:"深夜练习室的秘密",d:"凌晨两点你去检查灯。推开门发现一个成员独自练习脚上全是水泡。「你怎么还没走？」那一刻你心里动了一下。",cond:{training:"a"},ch:[{t:"帮他/她处理伤口聊到天亮",e:"🩹",s:{f:5,p:0,c:0},addBond:2},{t:"严厉批评然后亲自送去医院",e:"🏥",s:{f:8,p:3,c:4},addBond:3},{t:"默默放了水和创可贴就走了",e:"💧",s:{f:3,p:0,c:0},addBond:1}]},
+{e:"🌧️",i:"☂️",t:"暴雨中的争吵",d:"因为一个重大决策你和主唱大吵一架。他/她摔门冲进暴雨。你坐了三分钟然后拿起了伞。",ch:[{t:"追出去在雨中道歉",e:"☂️",s:{f:5,p:3,c:0},addBond:3},{t:"打电话让助理去找自己冷静一下",e:"📱",s:{f:0,p:0,c:0},addBond:0},{t:"追出去不道歉但把伞给了他/她自己淋雨",e:"🌧️",s:{f:3,p:0,c:0},addBond:2}]},
+{e:"🎂",i:"🎁",t:"只有你记得的生日",d:"今天是那个成员的生日。行程太满其他人都忘了。只有你提前订了小蛋糕。他/她打开盒子的时候哭了。",ch:[{t:"「别哭许个愿吧。以后每年我都记得。」",e:"🕯️",s:{f:5,p:0,c:4},addBond:4},{t:"「团队对不起你明天补办一个大的。」",e:"🎪",s:{f:3,p:5,c:2},addBond:1},{t:"「你值得更好的。不只是蛋糕。」",e:"💕",s:{f:3,p:0,c:0},addBond:3}]},
+{e:"💌",i:"💘",t:"天台告白",d:"看完最后一场演唱会的烟花。他/她转头看着你：「如果我不是偶像你还会在我身边吗？」",ch:[{t:"「不是因为你是偶像。是因为你是你。」",e:"💍",s:{f:5,p:-5,c:0},addBond:5},{t:"「先把下张专辑做完再说吧。」",e:"💼",s:{f:-3,p:3,c:3},addBond:-2},{t:"「如果你不是偶像我大概会更早说出口。」",e:"❤️",s:{f:8,p:-8,c:0},addBond:5}]}
+];
+
+var ENDS=[
+{id:"god",e:"👑",c:"#FFE500",g:"linear-gradient(135deg,#FFE500,#FF6B00 50%,#FF2D78)",t:"华语乐坛新纪元",sub:"LEGENDARY",lb:"「乐坛教父/教母」",d:"你的团登顶年榜TOP1，巡演全球售罄。业内封你造星之神。",ex:"📊 3.2亿人循环你们的歌。你已不是在造星——你在定义一个时代。",nd:"三维均高且总分极高"},
+{id:"idol",e:"🌟",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#A855F7)",t:"国民级养成传奇",sub:"IDOL KING",lb:"「偶像工业天花板」",d:"从十几岁养成到二十几岁，粉丝从学生变白领还在追。",ex:"🎓 十年了。练习室哭的小孩们站在了鸟巢。你完美平衡了情怀和商业。",nd:"粉丝黏性极高"},
+{id:"com",e:"🤡",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#CCFF00)",t:"国民级电子榨菜",sub:"COMEDY",lb:"「内娱最强画饼大师」",d:"唱跳不行综艺觉醒。表情包比歌曲播放量高100倍。",ex:"📱 春晚导演来电——不是唱歌是演小品。",nd:"路人盘高但粉丝少"},
+{id:"sell",e:"📦",c:"#FF6B00",g:"linear-gradient(135deg,#FF6B00,#FF2D78)",t:"糊作非为，直播带货",sub:"HUSTLE",lb:"「没有感情的赚钱机器」",d:"查无此团。全员直播间喊「9块9上车！」",ex:"🧻 GMV破亿。成员私下叫你纸巾大亨。",nd:"资本高但粉丝路人低"},
+{id:"farm",e:"🌾",c:"#CCFF00",g:"linear-gradient(135deg,#CCFF00,#00F5FF)",t:"回家种地/考公上岸",sub:"PEACE",lb:"「内娱清流」",d:"看破红尘。有人种草莓有人考公务员。",ex:"🍓 团没火但孩子们都很健康。你的奶茶店叫「前制作人的下午茶」。",nd:"总分低但没极端短板"},
+{id:"glo",e:"🌏",c:"#A855F7",g:"linear-gradient(135deg,#A855F7,#FF2D78 50%,#FFE500)",t:"墙内开花墙外香",sub:"GLOBAL",lb:"「文化输出急先锋」",d:"国内不温不火，海外突然爆红！",ex:"🌍 曼谷5万票3分钟售罄。国内网友：这团居然是我们的？",nd:"路人盘极高+粉丝适中"},
+{id:"cult",e:"🎸",c:"#FF2D78",g:"linear-gradient(135deg,#FF2D78,#A855F7)",t:"小众封神/地下传奇",sub:"CULT",lb:"「被时代辜负的天才」",d:"商业失败但成了教科书案例。",ex:"🎵 专辑二手5000块。豆瓣9.2。",nd:"粉丝高但资本路人低"},
+{id:"crash",e:"🗞️",c:"#FF4444",g:"linear-gradient(135deg,#FF4444,#880000)",t:"塌房塌到地下室",sub:"DISASTER",lb:"「业界毒瘤」",d:"丑闻不断全员塌房。公司被立案调查。",ex:"⚖️ 出狱那天只有一个粉丝来接你——还是来骂你的。",nd:"声誉全面崩盘"},
+{id:"mogul",e:"🎭",c:"#FFE500",g:"linear-gradient(135deg,#FFE500,#FF6B00)",t:"综艺帝国缔造者",sub:"MOGUL",lb:"「内娱综艺之神」",d:"比起音乐你更适合综艺。旗下综艺承包全网流量。",ex:"📺 恋综连三季霸榜。年度广告收入超100个偶像团总和。",nd:"路人盘和资本都高"},
+{id:"phx",e:"🔥",c:"#FF6B00",g:"linear-gradient(135deg,#FF6B00,#CCFF00)",t:"涅槃重生",sub:"PHOENIX",lb:"「打不死的小强」",d:"解散丑闻低谷后奇迹重组。回归曲让全网哭崩。",ex:"🎤 主唱说：「谢谢你们没放弃。」灯海亮了三分钟。",nd:"经历极端波动"},
+{id:"love",e:"💕",c:"#FF2D78",g:"linear-gradient(135deg,#FF2D78,#FFE500)",t:"塌房但成就了爱情",sub:"LOVE",lb:"「偶像圈月老」",d:"团没了但CP居然真在一起了。婚礼直播观看人数比出道演唱会还多。",ex:"💒 热搜#祝福XX#和#气死我了但祝福#并列第一。",nd:"粉丝较低+路人中等"},
+{id:"vt",e:"🖥️",c:"#A855F7",g:"linear-gradient(135deg,#A855F7,#00F5FF)",t:"转型虚拟偶像帝国",sub:"DIGITAL",lb:"「赛博造物主」",d:"真人做不下去全变虚拟偶像。Vtuber矩阵日入百万。",ex:"🎮 粉丝说：至少他们不会塌房。",nd:"资本路人适中但粉丝低"},
+{id:"teach",e:"🏫",c:"#CCFF00",g:"linear-gradient(135deg,#CCFF00,#A855F7)",t:"偶像培训教父/教母",sub:"ACADEMY",lb:"「造星流水线总工程师」",d:"培训体系被全行业抄作业。偶像学院8万一期期期爆满。",ex:"🎓 你出了本《偶像制造学》京东销量第一。",nd:"三维均衡资本偏高"},
+{id:"meme",e:"🃏",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#FFE500)",t:"成为互联网活化石",sub:"MEME LORD",lb:"「互联网考古活化石」",d:"团解散了但梗永远活在互联网上。",ex:"🦴 有大学生毕业论文写《论XX对中国互联网亚文化的影响》。",nd:"路人盘高+粉丝资本低"},
+{id:"debt",e:"💸",c:"#888",g:"linear-gradient(135deg,#666,#333)",t:"负债三千万跑路鹤岗",sub:"BANKRUPT",lb:"「韭菜收割反被割」",d:"投资打水漂。你连夜坐上去鹤岗的绿皮火车。",ex:"🚂 你在鹤岗花3万买了套房。房子从三万涨到了四万。",nd:"资本严重亏损"},
+{id:"jail",e:"🔒",c:"#880000",g:"linear-gradient(135deg,#880000,#440000)",t:"锒铛入狱",sub:"GAME OVER",lb:"「娱乐圈警示录」",d:"偷税漏税+合同诈骗。法院判了你三年半。",ex:"⚖️ 狱友问你以前干嘛的。你说偶像制作人。他说我以前追的就是你家的团！然后揍了你一顿。",nd:"资本极端负数"},
+{id:"homeless",e:"🏚️",c:"#555",g:"linear-gradient(135deg,#555,#222)",t:"睡桥洞的前制作人",sub:"ROCK BOTTOM",lb:"「从云端到桥洞」",d:"负债累累被列为失信被执行人。你在立交桥下搭了个帐篷。",ex:"🌧️ 某天有路人认出你拍了个视频#前偶像制作人现状#。评论第一条「他曾经离天堂那么近」。",nd:"三维全部负数"},
+{id:"fraud",e:"🕵️",c:"#AA0000",g:"linear-gradient(135deg,#AA0000,#550000)",t:"被资本反噬",sub:"BETRAYED",lb:"「资本的弃子」",d:"投资人转移了公司资产。你亲手打造的团和你没关系了。",ex:"📱 你刷到自己的团在别人公司发布会上。弹幕说新老板比之前那个好多了。",nd:"被投资人架空"},
+{id:"monk",e:"🧘",c:"#D4A574",g:"linear-gradient(135deg,#D4A574,#8B6914)",t:"出家/永不归来",sub:"ENLIGHTENED",lb:"「看破红尘的觉醒者」",d:"你突然顿悟了。把公司交给副总去了大理。后来有人在终南山看到你在教和尚唱歌。",ex:"🏔️ 「终南山音乐课」在B站播放量破千万。曾经的成员来看你你只说了「施主随缘」。",nd:"精神觉醒"},
+{id:"dark",e:"🕳️",c:"#333",g:"linear-gradient(135deg,#333,#111)",t:"消失在行业里",sub:"FORGOTTEN",lb:"「查无此人」",d:"没有轰轰烈烈的失败也没有东山再起。没人记得你们。",ex:"🌫️ 五年后你在三线城市商场角落开了一家琴行。偶尔有小孩来学钢琴你会想起站在舞台上的日子。",nd:"三维平庸无亮点"},
+{id:"marry",e:"💒",c:"#FF69B4",g:"linear-gradient(135deg,#FF69B4,#FF2D78 50%,#FFE500)",t:"和成员结婚了",sub:"TRUE LOVE",lb:"「制作人变老公/老婆」",d:"你和你亲手培养的成员日久生情了。婚礼当天全网炸裂。",ex:"💍 婚礼上他/她说「谢谢你当初选了我」。热搜第一#制作人和偶像结婚了#，第二#这个瓜我能吃一辈子#。",nd:"羁绊值≥5+三维合理"},
+{id:"politics",e:"🏛️",c:"#4169E1",g:"linear-gradient(135deg,#4169E1,#191970)",t:"跨界从政",sub:"POWER",lb:"「从造星到造福」",d:"你发现组织能力和号召力比搞娱乐更有价值。你为文娱从业者权益发声。",ex:"🎤 你的提案引发全网讨论。前成员给你举灯牌「制作人加油！」",nd:"路人盘极高+三维均衡"},
+{id:"rival",e:"⚡",c:"#FF4500",g:"linear-gradient(135deg,#FF4500,#8B0000)",t:"和对家合并了",sub:"MERGE",lb:"「化敌为友の商业奇才」",d:"打了三年的死对头突然提出合并。粉丝崩溃但股价涨了300%。",ex:"🤝 有粉丝评论「我追了三年的撕逼大戏居然是商战剧本？」",nd:"资本高+路人高"},
+{id:"anime",e:"🎌",c:"#FF6B81",g:"linear-gradient(135deg,#FF6B81,#A855F7)",t:"被改编成动漫了",sub:"2D LEGEND",lb:"「次元壁破壁人」",d:"你们的出道故事太离奇被买下版权改编成热血番剧。动漫比真人还火。",ex:"🎬 动漫版把你画成天才制作人（比本人好看100倍）。二次元粉比真人粉还多。",nd:"路人盘高+粉丝中等"},
+{id:"scandal_win",e:"🎰",c:"#FFD700",g:"linear-gradient(135deg,#FFD700,#FF6B00)",t:"黑红到底就是红",sub:"DARK HORSE",lb:"「争议即流量の邪神」",d:"越骂越火。你成了流量炼金术师。",ex:"📱 商学院收录了你的方法论叫《骂不死的XX》。你上了TED演讲「被全网骂如何年入过亿」。",nd:"路人极高+粉丝低+资本高"},
+{id:"heir",e:"👶",c:"#87CEEB",g:"linear-gradient(135deg,#87CEEB,#4169E1)",t:"二代目传承",sub:"LEGACY",lb:"「偶像界世袭制开创者」",d:"你退休了但你孩子继承了公司。更离谱的是——你孩子和前成员的孩子组了新团比当年还火。",ex:"👨‍👧 你孩子在出道舞台上说「我爸/妈是最伟大的制作人」。你哭得像个傻子。",nd:"粉丝高+资本高"},
+{id:"write",e:"📖",c:"#DEB887",g:"linear-gradient(135deg,#DEB887,#8B4513)",t:"写了本畅销书",sub:"AUTHOR",lb:"「内娱第一笔杆子」",d:"你把这三年写成了《偶像制造局》。卖了500万册。",ex:"📚 Netflix买了改编权找了顶流来演你。你觉得演员比你帅太多了。",nd:"三维中等偏低"},
+{id:"loop",e:"🔄",c:"#9370DB",g:"linear-gradient(135deg,#9370DB,#4B0082)",t:"重新出发",sub:"NEW GAME+",lb:"「永不言弃の造梦师」",d:"第一个团解散了。你哭了一个晚上第二天又开始面试新练习生了。",ex:"🌅 第二个团居然比第一个还火。前成员转发了你的新团MV说「看我们的制作人又赢了」。",nd:"总分中等+经历波动"}
+];
+
+function getRank(total,endingId){
+  var badEndings={
+    "marry":{pct:88,title:"人生赢家"},"politics":{pct:92,title:"跨界之王"},
+    "rival":{pct:90,title:"商业奇才"},"anime":{pct:82,title:"次元传奇"},
+    "scandal_win":{pct:78,title:"争议之王"},"heir":{pct:95,title:"传奇缔造者"},
+    "write":{pct:55,title:"故事讲述者"},"loop":{pct:45,title:"永不言弃"},
+    "jail":{pct:0.3,title:"已被行业除名"},"homeless":{pct:0.5,title:"已被行业除名"},
+    "fraud":{pct:5,title:"被资本毒打"},"crash":{pct:2,title:"被行业拉黑"},
+    "debt":{pct:1,title:"被行业除名"},"dark":{pct:8,title:"行业透明人"},
+    "monk":{pct:15,title:"主动退出江湖"},"farm":{pct:12,title:"退圈养老"}
+  };
+  if(badEndings[endingId])return badEndings[endingId];
+  if(total>=250)return{pct:99.9,title:"传说中的存在"};
+  if(total>=200)return{pct:99,title:"全球顶级制作人"};
+  if(total>=180)return{pct:97,title:"业界大佬"};
+  if(total>=150)return{pct:93,title:"一线制作人"};
+  if(total>=120)return{pct:85,title:"实力派制作人"};
+  if(total>=100)return{pct:75,title:"小有名气"};
+  if(total>=80)return{pct:60,title:"初出茅庐"};
+  if(total>=60)return{pct:40,title:"苦苦挣扎"};
+  if(total>=40)return{pct:20,title:"惨淡经营"};
+  if(total>=20)return{pct:8,title:"行业炮灰"};
+  if(total>=0)return{pct:3,title:"被行业毒打"};
+  return{pct:0.5,title:"已被行业除名"};
+}
+
+function getEnd(s){
+  var f=s.f,p=s.p,c=s.c,t=f+p+c,mn=Math.min(f,p,c),mx=Math.max(f,p,c);
+  // ===== 极端负面 =====
+  if(mn<=-15)return ENDS[16];
+  if(c<=-20)return ENDS[15];
+  if(c<=-10)return ENDS[14];
+  if(f<=-10&&p<=-10)return ENDS[7];
+  if(t<=-10)return ENDS[16];
+  if(mn<=-5)return ENDS[7];
+  if(c<=0&&t<200)return ENDS[14]; // 资本负→鹤岗
+  if(mn<=5&&t<180)return ENDS[7]; // 全面低→塌房
+  // ===== 低分 t<200 (~5%) =====
+  if(t<180)return ENDS[19]; // 消失
+  if(t<220)return ENDS[4]; // 种地
+  // ===== 被反噬 =====
+  if(c<0&&f>100&&p>100)return ENDS[17];
+  // ===== 结婚 =====
+  if(G.bond>=6&&f>=30&&p>=20&&c>=10)return ENDS[20];
+  // ===== t>=600: 紫微星（极稀有 ~3%）=====
+  if(t>=600&&mn>=120)return ENDS[0];
+  // ===== t>=500: 传说级 (~10%) =====
+  if(t>=500){
+    if(mn>=100)return ENDS[0]; // 紫微星（均衡型）
+    if(f>=p&&f>=c){return f>=200?ENDS[1]:ENDS[25];} // 养成/二代目
+    if(p>=f&&p>=c){
+      if(p>=200)return ENDS[8]; // 综艺帝国
+      if(f>=50&&c>=50)return ENDS[21]; // 从政
+      return ENDS[5]; // 墙外香
+    }
+    if(c>=150)return ENDS[22]; // 合并
+    return ENDS[25]; // 二代目
+  }
+  // ===== t>=400: 高段 (~30%) =====
+  if(t>=400){
+    if(mx-mn>=150)return ENDS[9]; // 涅槃
+    if(f>=180&&p<60)return ENDS[6]; // 小众封神
+    if(p>=160&&f<60)return ENDS[2]; // 搞笑通告
+    if(c>=130&&f<60)return ENDS[3]; // 带货
+    if(p>=150&&f<50&&c>=80)return ENDS[24]; // 黑红
+    if(p>=140&&f>=40&&f<=100)return ENDS[23]; // 改编动漫
+    if(c>=100&&p>=100)return ENDS[22]; // 合并
+    if(f>=130&&c>=90)return ENDS[25]; // 二代目
+    if(c>=90&&f>=40&&p>=40)return ENDS[12]; // 培训教父
+    if(c>=80&&p>=80&&f<40)return ENDS[11]; // 虚拟偶像
+    if(p>=110&&f<50&&c<50)return ENDS[13]; // 互联网活化石
+    if(f<60&&p>=60&&c>=30)return ENDS[10]; // CP爱情
+    if(f>=p&&f>=c)return ENDS[6]; // 小众封神
+    if(p>=f&&p>=c)return ENDS[23]; // 改编动漫
+    return ENDS[12]; // 培训教父
+  }
+  // ===== t>=300: 中段（最常见 ~30%）=====
+  if(t>=300){
+    if(mx-mn>=100)return ENDS[9]; // 涅槃
+    if(f>=100&&p<40)return ENDS[6]; // 小众封神
+    if(p>=100&&f<40)return ENDS[2]; // 搞笑通告
+    if(c>=80&&f<40)return ENDS[3]; // 带货
+    if(c>=60&&p>=60&&f<30)return ENDS[11]; // 虚拟偶像
+    if(p>=80&&f<30&&c<30)return ENDS[13]; // 互联网活化石
+    if(f<40&&p>=40&&c>=25)return ENDS[10]; // CP爱情
+    if(c>=60&&f>=30&&p>=30)return ENDS[12]; // 培训教父
+    if(p>=70&&f>=30)return ENDS[23]; // 改编动漫
+    if(f>=p&&f>=c)return ENDS[10]; // CP爱情
+    if(p>=f&&p>=c)return ENDS[13]; // 活化石
+    return ENDS[27]; // 重新出发
+  }
+  // ===== t>=220: 中低段 (~15%) =====
+  if(t>=220){
+    if(Math.abs(f-p)<=20&&Math.abs(p-c)<=20&&mx<=90)return ENDS[18]; // 出家
+    if(mx<=100&&mn>=15)return ENDS[26]; // 写书
+    if(mx-mn>=40)return ENDS[27]; // 重新出发
+    if(f>=p&&f>=c)return ENDS[10]; // CP爱情
+    if(p>=f&&p>=c)return ENDS[13]; // 活化石
+    return ENDS[26]; // 写书
+  }
+  // ===== t<220 但>种地线 =====
+  if(Math.abs(f-p)<=15&&Math.abs(p-c)<=15)return ENDS[18]; // 出家
+  if(mx-mn>=30)return ENDS[27]; // 重新出发
+  return ENDS[26]; // 写书
+}
+
+function shuf(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=b[i];b[i]=b[j];b[j]=tmp;}return b;}
+// Pick events: prioritize ones matching player choices, fill rest randomly
+function pickEvents(count,usedArr){
+  var used=usedArr.map(function(x){return EVTS.indexOf(x);});
+  var avail=EVTS.filter(function(_,i){return used.indexOf(i)<0;});
+  // Separate matched vs unmatched
+  var matched=[];var unmatched=[];
+  avail.forEach(function(ev){
+    if(ev.cond){
+      var key=Object.keys(ev.cond)[0];
+      if(key==='bond'){
+        if(G.bond>=ev.cond[key]){matched.push(ev);}
+      }else if(G.choices[key]===ev.cond[key]){matched.push(ev);}
+      else{unmatched.push(ev);}
+    }else{unmatched.push(ev);}
+  });
+  // Shuffle both
+  matched=shuf(matched);unmatched=shuf(unmatched);
+  // Take matched first (max 2), then fill from unmatched
+  var result=matched.slice(0,Math.min(2,count));
+  var need=count-result.length;
+  result=result.concat(unmatched.slice(0,need));
+  return shuf(result);
+}
+function addS(s){
+  G.stats.f=G.stats.f+(s.f||0);
+  G.stats.p=G.stats.p+(s.p||0);
+  var cBonus=0;
+  if(s.c>0&&G.stats.f>0){cBonus=Math.floor(G.stats.f/30);}
+  if(s.c>0&&G.stats.p>0){cBonus+=Math.floor(G.stats.p/40);}
+  G.stats.c=G.stats.c+(s.c||0)+cBonus;
+  if(s.addBond)G.bond=G.bond+(s.addBond||0);
+}
+
+// Canvas share image generation
+function generateShareImage(ed,rat,total,cb){
+  var W=750,H=1334;
+  var cv=document.createElement("canvas");cv.width=W;cv.height=H;
+  var ctx=cv.getContext("2d");
+  // Background
+  ctx.fillStyle="#0A0A0A";ctx.fillRect(0,0,W,H);
+  // Gradient accent
+  var grd=ctx.createLinearGradient(0,0,W,H);
+  grd.addColorStop(0,ed.c+"30");grd.addColorStop(1,"transparent");
+  ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+  // Top label
+  ctx.fillStyle="#CCFF00";ctx.font="bold 24px 'Noto Sans SC',sans-serif";ctx.textAlign="center";
+  ctx.fillText("QQ音乐 × 金牌制作人",W/2,80);
+  ctx.fillStyle="#888";ctx.font="16px 'Noto Sans SC',sans-serif";
+  ctx.fillText("INTERACTIVE IDOL SIMULATOR",W/2,110);
+  // Emoji
+  ctx.font="80px sans-serif";ctx.fillText(ed.e,W/2,220);
+  // Ending title
+  ctx.fillStyle="#F5F5F5";ctx.font="bold 42px 'Noto Sans SC',sans-serif";
+  ctx.fillText(ed.t,W/2,290);
+  // Sub
+  ctx.fillStyle=ed.c;ctx.font="bold 18px 'Noto Sans SC',sans-serif";
+  ctx.fillText(ed.sub+" ENDING",W/2,325);
+  // Team name
+  ctx.fillStyle="#F5F5F5";ctx.font="bold 48px 'Noto Sans SC',sans-serif";
+  ctx.fillText((G.gender==="male"?"🕺 ":"💃 ")+G.name,W/2,410);
+  // Label
+  ctx.fillStyle=ed.c;ctx.font="bold 28px 'Noto Sans SC',sans-serif";
+  ctx.fillText(ed.lb,W/2,465);
+  // Rating
+  ctx.fillStyle="#F5F5F5";ctx.font="bold 22px 'Noto Sans SC',sans-serif";
+  ctx.fillText("PRODUCER RATING",W/2,530);
+  ctx.font="bold 72px 'Noto Sans SC',sans-serif";
+  ctx.fillStyle=ed.c;ctx.fillText(rat,W/2,610);
+  ctx.fillStyle="#888";ctx.font="22px 'Noto Sans SC',sans-serif";
+  ctx.fillText(total+"万",W/2,645);var rnk=getRank(total,ed.id);ctx.fillStyle="#CCFF00";ctx.font="bold 18px 'Noto Sans SC',sans-serif";ctx.fillText("超越了 "+rnk.pct+"% 的制作人 · "+rnk.title,W/2,680);
+  // Stats bars
+  var stats=[{l:"粉丝黏性",v:G.stats.f,c:"#FF2D78"},{l:"路人盘",v:G.stats.p,c:"#00F5FF"},{l:"资本值",v:G.stats.c,c:"#FFE500"}];
+  var bw=180,gap=30,startX=(W-bw*3-gap*2)/2;
+  stats.forEach(function(st,i){
+    var x=startX+i*(bw+gap);
+    ctx.fillStyle="rgba(255,255,255,0.05)";
+    ctx.beginPath();ctx.roundRect(x,680,bw,90,12);ctx.fill();
+    ctx.fillStyle=st.c;ctx.font="bold 36px 'Noto Sans SC',sans-serif";ctx.textAlign="center";
+    ctx.fillText(st.v,x+bw/2,725);
+    ctx.fillStyle="#888";ctx.font="14px 'Noto Sans SC',sans-serif";
+    ctx.fillText(st.l,x+bw/2,755);
+  });
+  ctx.textAlign="center";
+  // Description
+  ctx.fillStyle="#aaa";ctx.font="20px 'Noto Sans SC',sans-serif";
+  var lines=wrapText(ctx,ed.d,W-120);
+  var dy=820;
+  lines.forEach(function(line){ctx.fillText(line,W/2,dy);dy+=30;});
+  // QR Code area
+  var qrY=Math.max(dy+30,950);
+  ctx.fillStyle="rgba(255,255,255,0.03)";
+  ctx.beginPath();ctx.roundRect(W/2-160,qrY,320,280,16);ctx.fill();
+  ctx.strokeStyle="rgba(255,255,255,0.08)";ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(W/2-160,qrY,320,280,16);ctx.stroke();
+  // Draw QR code using simple pixel pattern (encode URL)
+  drawQR(ctx,W/2-80,qrY+20,160,"https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol");
+  ctx.fillStyle="#CCFF00";ctx.font="bold 16px 'Noto Sans SC',sans-serif";
+  ctx.fillText("扫码给你的团写出道曲",W/2,qrY+220);
+  ctx.fillStyle="#666";ctx.font="14px 'Noto Sans SC',sans-serif";
+  ctx.fillText("QQ音乐 · 金牌制作人",W/2,qrY+250);
+  // Bottom
+  ctx.fillStyle="rgba(255,255,255,0.1)";ctx.font="12px 'Noto Sans SC',sans-serif";
+  ctx.fillText("MADE WITH 🤫 BY 嘘掌门",W/2,H-30);
+  cb(cv.toDataURL("image/png"));
+}
+function wrapText(ctx,text,maxW){
+  var lines=[];var line="";
+  for(var i=0;i<text.length;i++){
+    var test=line+text[i];
+    if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=text[i];}
+    else{line=test;}
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+// Simple QR-like pattern (actual QR needs a library, so we draw a styled placeholder + link)
+function drawQR(ctx,x,y,size,url){
+  // We'll use a simple visual QR representation
+  // For real QR, load qrcode.js. Here we draw a branded pattern
+  var s=size;var cs=s/21;
+  ctx.fillStyle="#fff";
+  ctx.fillRect(x,y,s,s);
+  // Draw finder patterns (3 corners)
+  function drawFinder(fx,fy){
+    ctx.fillStyle="#000";ctx.fillRect(fx,fy,cs*7,cs*7);
+    ctx.fillStyle="#fff";ctx.fillRect(fx+cs,fy+cs,cs*5,cs*5);
+    ctx.fillStyle="#000";ctx.fillRect(fx+cs*2,fy+cs*2,cs*3,cs*3);
+  }
+  drawFinder(x,y);drawFinder(x+cs*14,y);drawFinder(x,y+cs*14);
+  // Random data pattern
+  var seed=0;for(var i=0;i<url.length;i++)seed=(seed*31+url.charCodeAt(i))&0xFFFF;
+  for(var row=0;row<21;row++){
+    for(var col=0;col<21;col++){
+      // Skip finder areas
+      if((row<8&&col<8)||(row<8&&col>12)||(row>12&&col<8))continue;
+      seed=(seed*1103515245+12345)&0x7FFFFFFF;
+      if(seed%3===0){
+        ctx.fillStyle="#000";
+        ctx.fillRect(x+col*cs,y+row*cs,cs,cs);
+      }
+    }
+  }
+  // Center logo
+  ctx.fillStyle="#CCFF00";
+  ctx.beginPath();ctx.arc(x+s/2,y+s/2,cs*2.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#000";ctx.font="bold "+(cs*2.5)+"px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText("♪",x+s/2,y+s/2);
+  ctx.textBaseline="alphabetic";
+}
+function $(id){return document.getElementById(id);}
+function h(tag,cls,html){var el=document.createElement(tag);if(cls)el.className=cls;if(html!==undefined)el.innerHTML=html;return el;}
+
+// -- RENDER HELPERS --
+function renderStats(compact){
+  var items=[{l:"粉丝黏性",v:G.stats.f,c:"var(--ap)",e:"❤️‍🔥"},{l:"路人盘",v:G.stats.p,c:"var(--ac)",e:"👁️"},{l:"资本值",v:G.stats.c,c:"var(--ay)",e:"💰"}];
+  var d=h("div","sbar");
+  items.forEach(function(it){
+    var s=h("div","si");
+    s.innerHTML='<div style="font-size:'+(compact?"11px":"14px")+'">'+it.e+'</div><div class="sv" style="font-size:'+(compact?"13px":"16px")+';color:'+it.c+'">'+it.v+'</div><div class="sl">'+it.l+'</div>';
+    d.appendChild(s);
+  });
+  return d;
+}
+function makeBtn(item,color,cb){
+  var b=h("button","btn ce");
+  b.style.borderColor="rgba(255,255,255,.08)";
+  b.innerHTML='<span class="be">'+item.e+'</span><div style="flex:1;min-width:0"><div class="bt">'+item.t+'</div>'+(item.d?'<div class="bd">'+item.d+'</div>':'')+(item.g?'<div class="bg2" style="color:'+color+'">'+item.g+'</div>':'')+'</div>';
+  b.onmouseenter=function(){b.style.borderColor=color;};
+  b.onmouseleave=function(){b.style.borderColor="rgba(255,255,255,.08)";};
+  b.onclick=function(){if(cb)cb(item);};
+  return b;
+}
+function renderHeader(num,title,sub){
+  var d=h("div","ce");d.style.textAlign="center";d.style.marginBottom="16px";
+  d.innerHTML='<div style="font-size:10px;letter-spacing:5px;color:var(--ag);font-weight:700;margin-bottom:5px">STAGE '+String(num).padStart(2,"0")+'</div><h2 style="font-size:22px;font-weight:900;line-height:1.2;background:linear-gradient(135deg,#fff,var(--ag));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px">'+title+'</h2>'+(sub?'<p style="font-size:11px;color:var(--ts);line-height:1.5;max-width:320px;margin:0 auto">'+sub+'</p>':'');
+  return d;
+}
+function renderProgress(){
+  var si=screenIndex();var yr=si<=7?1:si<=10?2:3;
+  return '<div class="pbar"><div style="height:3px;background:rgba(255,255,255,.08);position:relative"><div class="pfill" style="width:'+((si+1)/12*100)+'%"></div></div><div class="pinfo"><span>STAGE '+String(si+1).padStart(2,"0")+'/12</span><span style="color:var(--ag);font-weight:700">YEAR '+yr+'</span></div></div>';
+}
+function renderBottomStats(){
+  var d=h("div","bstats");
+  var inner=h("div","bsi");
+  inner.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:9px;letter-spacing:1px;color:var(--ts)">'+(G.gender==="male"?"🕺":"💃")+' '+G.name+'</span><span style="font-size:9px;letter-spacing:1px;color:var(--ag);font-weight:700">TOTAL: '+(G.stats.f+G.stats.p+G.stats.c)+'万'+(G.bond>0?' · 💕羁绊:'+G.bond:'')+'</span></div>';
+  inner.appendChild(renderStats(true));
+  d.appendChild(inner);
+  return d;
+}
+function screenIndex(){
+  var m={intro:0,genesis:0,identity:1,strategy:2,training:3,style:4,debut:5,fanops:6,crisis1:7,year2:8,crisis2:9,year3:10,crisis3:11,ending:12};
+  return m[G.screen]||0;
+}
+var COLORS=["var(--ay)","var(--ac)","var(--ap)","var(--ao)","var(--au)"];
+var COLORS2=["var(--au)","var(--ao)","var(--ap)","var(--ac)","var(--ay)"];
+
+function go(scr){
+  var app=$("app");app.style.opacity="0";
+  setTimeout(function(){G.screen=scr;render();window.scrollTo({top:0,behavior:"instant"});app.style.opacity="1";},280);
+}
+
+// -- SCREEN RENDERERS --
+function render(){
+  var app=$("app");app.innerHTML="";
+  var s=G.screen;
+  if(s==="intro")renderIntro(app);
+  else if(s==="genesis")renderGenesis(app);
+  else if(s==="identity")renderChoiceRecord(app,2,"你的幕后身份","你的出身决定了起跑线",IDS,COLORS,"identity","strategy");
+  else if(s==="strategy")renderChoiceRecord(app,3,"出道战略",G.name+" 将以什么姿态杀入娱乐圈？",STRATS,COLORS2,"strategy","training");
+  else if(s==="training")renderChoiceRecord(app,4,"练习生养成模式","偶像的根基在出道前就决定了",TRAINS,COLORS,"training","style");
+  else if(s==="style")renderChoiceRecord(app,5,"音乐路线",G.name+" 的声音DNA是什么？",MUSICS,COLORS2,"style","debut");
+  else if(s==="debut")renderChoiceRecord(app,6,"出道方式","万事俱备，用什么方式让世界认识你们？",DEBUTS,COLORS,"debut","fanops");
+  else if(s==="fanops")renderChoiceRecordThen(app,7,"粉丝运营策略","出道只是开始。怎么让粉丝留下来？",FANS,COLORS2,"fanops",function(){G.evts1=pickEvents(4,[]);go("crisis1");});
+  else if(s==="crisis1")renderEvents(app,8,G.evts1,function(){go("year2");});
+  else if(s==="year2")renderChoiceRecordThen(app,9,"第二年：关键抉择",G.name+" 出道一年了，接下来怎么走？",Y2,COLORS,"year2",function(){G.evts2=pickEvents(3,G.evts1);go("crisis2");});
+  else if(s==="crisis2")renderEvents(app,10,G.evts2,function(){go("year3");});
+  else if(s==="year3")renderChoiceRecordThen(app,11,"第三年：命运之年","合约最后一年。"+G.name+" 的终局之战。",Y3,COLORS2,"year3",function(){G.evts3=pickEvents(3,G.evts1.concat(G.evts2));go("crisis3");});
+  else if(s==="crisis3")renderEvents(app,12,G.evts3,function(){setTimeout(function(){go("ending");},500);});
+  else if(s==="ending")renderEnding(app);
+  // Add progress + bottom stats
+  if(s!=="intro"&&s!=="ending"){app.insertAdjacentHTML("afterbegin",renderProgress());}
+  if(G.stats.f+G.stats.p+G.stats.c>0&&s!=="intro"&&s!=="genesis"&&s!=="ending"){app.appendChild(renderBottomStats());}
+}
+
+function renderIntro(app){
+  var p=h("div","page intro");
+  p.innerHTML='<div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(204,255,0,.05),transparent 50%);animation:pl 4s ease infinite"></div><div class="ce" style="text-align:center;position:relative;z-index:1"><div style="font-size:12px;letter-spacing:8px;color:var(--ag);font-weight:700;margin-bottom:12px">QQ音乐 × 金牌制作人</div><div style="font-size:10px;letter-spacing:4px;color:var(--ts);margin-bottom:24px">INTERACTIVE IDOL SIMULATOR</div><h1 style="font-size:30px;font-weight:900;line-height:1.15;margin-bottom:10px"><span style="color:var(--ag)">从零开始</span>的<br><span class="gt" style="display:inline-block">偶像企划</span></h1><p style="font-size:11px;color:var(--ts);line-height:1.8;max-width:280px;margin:0 auto 32px">你将以制作人身份，用三年时间<br>亲手打造一个偶像团体。<br><span style="color:var(--ap);font-size:10px">⚠️ 娱乐圈没有后悔药</span></p><button id="startBtn" style="background:var(--ag);color:#000;border:none;padding:13px 40px;border-radius:100px;font-size:14px;font-weight:900;cursor:pointer;letter-spacing:2px;box-shadow:0 0 40px #ccff004d,0 10px 40px #ccff0033;font-family:inherit">开始企划 →</button><div style="margin-top:36px;font-size:9px;color:rgba(255,255,255,.15);letter-spacing:2px;line-height:1.8">12 STAGES · 3 YEARS · 20 EVENTS · 15 ENDINGS</div></div>';
+  app.appendChild(p);
+  setTimeout(function(){$("startBtn").onclick=function(){go("genesis");};},100);
+}
+
+function renderGenesis(app){
+  var p=h("div","page");var inn=h("div","inn");
+  if(!G.gender){
+    inn.appendChild(renderHeader(1,"企划诞生","选择你的偶像团体类型"));
+    var ch=h("div","choices");
+    var b1=makeBtn({e:"🕺",t:"限定男团",d:"刀群最前线，CP粉和唯粉的修罗场",g:"「哥哥们冲！」"},"var(--ac)",function(){G.gender="male";go("genesis");});
+    var b2=makeBtn({e:"💃",t:"限定女团",d:"颜值即正义，实力被低估的永恒困境",g:"「姐姐好美好飒！」"},"var(--ap)",function(){G.gender="female";go("genesis");});
+    ch.appendChild(b1);ch.appendChild(b2);inn.appendChild(ch);
+  }else{
+    inn.innerHTML='<div class="ce" style="text-align:center"><div style="margin-bottom:24px"><div style="display:inline-block;padding:5px 14px;border-radius:100px;background:'+(G.gender==="male"?"rgba(0,245,255,.1)":"rgba(255,45,120,.1)")+';color:'+(G.gender==="male"?"var(--ac)":"var(--ap)")+';font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:18px">'+(G.gender==="male"?"🕺 限定男团":"💃 限定女团")+'</div><h2 style="font-size:22px;font-weight:900;margin-bottom:6px">给你的团取个名字</h2><p style="font-size:11px;color:var(--ts)">一个响亮的名字，是出圈的第一步</p></div><div style="position:relative;margin-bottom:18px"><input id="nameInput" placeholder="输入团名..." maxlength="20" style="width:100%;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;font-size:18px;font-weight:900;color:var(--tp);text-align:center;outline:none;font-family:inherit;animation:bg 3s ease infinite"><div id="nameCount" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--ts)">0/20</div></div><button id="confirmBtn" disabled style="background:rgba(255,255,255,.05);color:var(--ts);border:none;padding:12px 36px;border-radius:100px;font-size:13px;font-weight:900;cursor:not-allowed;letter-spacing:2px;font-family:inherit">确认出道 →</button></div>';
+    setTimeout(function(){
+      var inp=$("nameInput"),btn=$("confirmBtn"),cnt=$("nameCount");
+      inp.focus();
+      inp.oninput=function(){
+        cnt.textContent=inp.value.length+"/20";
+        if(inp.value.trim()){btn.disabled=false;btn.style.background="var(--ag)";btn.style.color="#000";btn.style.cursor="pointer";btn.style.boxShadow="0 0 30px #ccff004d";}
+        else{btn.disabled=true;btn.style.background="rgba(255,255,255,.05)";btn.style.color="var(--ts)";btn.style.cursor="not-allowed";btn.style.boxShadow="none";}
+      };
+      inp.onkeydown=function(ev){if(ev.key==="Enter"&&inp.value.trim()){G.name=inp.value.trim();go("identity");}};
+      btn.onclick=function(){if(inp.value.trim()){G.name=inp.value.trim();go("identity");}};
+    },100);
+  }
+  p.appendChild(inn);app.appendChild(p);
+}
+
+function renderChoice(app,num,title,sub,items,colors,next){
+  renderChoiceThen(app,num,title,sub,items,colors,function(){go(next);});
+}
+function renderChoiceRecord(app,num,title,sub,items,colors,recordKey,next){
+  renderChoiceRecordThen(app,num,title,sub,items,colors,recordKey,function(){go(next);});
+}
+function renderChoiceRecordThen(app,num,title,sub,items,colors,recordKey,cb){
+  var p=h("div","page hs");var inn=h("div","inn");
+  inn.appendChild(renderHeader(num,title,sub));
+  var ch=h("div","choices");
+  items.forEach(function(it,i){
+    var b=makeBtn(it,colors[i%colors.length],function(item){addS(item.s);G.choices[recordKey]=item.id;cb();});
+    ch.appendChild(b);
+  });
+  inn.appendChild(ch);p.appendChild(inn);app.appendChild(p);
+}
+function renderChoiceThen(app,num,title,sub,items,colors,cb){
+  var p=h("div","page hs");var inn=h("div","inn");
+  inn.appendChild(renderHeader(num,title,sub));
+  var ch=h("div","choices");
+  items.forEach(function(it,i){
+    var b=makeBtn(it,colors[i%colors.length],function(item){addS(item.s);cb();});
+    ch.appendChild(b);
+  });
+  inn.appendChild(ch);p.appendChild(inn);app.appendChild(p);
+}
+
+function renderEvents(app,num,events,onDone){
+  G.curEvt=0;G.evtResults=[];
+  function showEvent(){
+    var app2=$("app");
+    // Remove old page
+    var oldPage=app2.querySelector(".page");if(oldPage)oldPage.remove();
+    // Remove old bottom stats
+    var oldBS=app2.querySelector(".bstats");if(oldBS)oldBS.remove();
+    var ev=events[G.curEvt];
+    var p=h("div","page hs");var inn=h("div","inn ce");
+    inn.innerHTML='<div style="text-align:center;margin-bottom:14px"><div style="font-size:10px;letter-spacing:4px;color:var(--ap);margin-bottom:5px;font-weight:700">STAGE '+String(num).padStart(2,"0")+' — EVENT '+(G.curEvt+1)+'/'+events.length+'</div><div class="nbadge"><span>'+ev.i+'</span><span>BREAKING NEWS</span></div></div><div class="ecard"><div style="font-size:30px;margin-bottom:6px">'+ev.e+'</div><div style="font-size:16px;font-weight:900;color:var(--ap);margin-bottom:6px">'+ev.t+'</div><div style="font-size:11px;color:var(--ts);line-height:1.6">'+ev.d+'</div></div><div style="font-size:10px;letter-spacing:2px;color:var(--ts);text-align:center;margin-bottom:7px;font-weight:700">你的决策</div>';
+    var ch2=h("div","choices");
+    var CC=["var(--ac)","var(--ao)","var(--au)"];
+    ev.ch.forEach(function(c,i){
+      var b=makeBtn({e:c.e,t:c.t},"var(--ac)",function(){
+        addS(c.s);if(c.addBond){G.bond+=(c.addBond||0);}G.evtResults.push(c);
+        // Show toast
+        showToast(c.s);
+        if(G.curEvt<events.length-1){G.curEvt++;setTimeout(function(){showEvent();window.scrollTo({top:0,behavior:"smooth"});},700);}
+        else{setTimeout(function(){onDone();},900);}
+      });
+      b.style.borderColor="rgba(255,255,255,.08)";
+      b.onmouseenter=function(){b.style.borderColor=CC[i];};
+      b.onmouseleave=function(){b.style.borderColor="rgba(255,255,255,.08)";};
+      ch2.appendChild(b);
+    });
+    inn.appendChild(ch2);p.appendChild(inn);
+    // Insert before bottom stats
+    var pbar=app2.querySelector(".pbar");
+    if(pbar)pbar.insertAdjacentElement("afterend",p);
+    else app2.prepend(p);
+    // Re-add bottom stats
+    app2.appendChild(renderBottomStats());
+    // Update progress
+    var pfill=app2.querySelector(".pfill");
+    if(pfill)pfill.style.width=((num)/12*100)+"%";
+  }
+  showEvent();
+}
+
+function showToast(s){
+  var old=document.querySelector(".toast");if(old)old.remove();
+  var items=[{k:"f",e:"❤️‍🔥"},{k:"p",e:"👁️"},{k:"c",e:"💰"}];
+  var t=h("div","toast ce");
+  var hasAny=false;
+  items.forEach(function(it){
+    var v=s[it.k]||0;if(!v)return;hasAny=true;
+    var d=h("div","",true);d.style.textAlign="center";
+    d.innerHTML='<div style="font-size:12px">'+it.e+'</div><div style="font-size:12px;font-weight:900;color:'+(v>0?"var(--ag)":"var(--ap)")+'">'+(v>0?"+":"")+v+'</div>';
+    t.appendChild(d);
+  });
+  if(!hasAny)return;
+  document.body.appendChild(t);
+  setTimeout(function(){t.style.opacity="0";t.style.transition="opacity .5s";setTimeout(function(){t.remove();},500);},1500);
+}
+
+function renderEnding(app){
+  var ed=getEnd(G.stats);var t=G.stats.f+G.stats.p+G.stats.c;
+  var rat="F",rc="#666";
+  var rank=getRank(t,ed.id);
+  if(t>=110){rat="SSS";rc="var(--ay)";}else if(t>=90){rat="SS";rc="var(--ao)";}else if(t>=75){rat="S";rc="var(--ap)";}else if(t>=60){rat="A";rc="var(--ag)";}else if(t>=45){rat="B";rc="var(--ac)";}else if(t>=30){rat="C";rc="var(--au)";}
+  var p=h("div","page");p.style.paddingTop="40px";p.style.paddingBottom="50px";
+  p.innerHTML='<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,'+ed.c+'15,transparent 60%);animation:pl 3s ease infinite"></div>';
+  var inn=h("div","inn ce");inn.style.textAlign="center";inn.style.position="relative";inn.style.zIndex="1";
+  // Confetti for god ending
+  var confetti="";
+  if(ed.id==="god"){for(var i=0;i<20;i++){confetti+='<div style="position:fixed;left:'+Math.random()*100+'%;top:-5%;width:'+(4+Math.random()*6)+'px;height:'+(4+Math.random()*6)+'px;border-radius:'+(Math.random()>.5?"50%":"2px")+';background:'+["var(--ag)","var(--ap)","var(--ac)","var(--ay)","var(--au)"][i%5]+';animation:cf '+(2+Math.random()*3)+'s linear '+(Math.random()*2)+'s infinite;opacity:.5"></div>';}}
+
+  var endsGrid="";
+  ENDS.forEach(function(en){endsGrid+='<span style="font-size:9px;padding:2px 6px;border-radius:5px;background:'+(en.id===ed.id?"rgba(255,255,255,.1)":"rgba(255,255,255,.02)")+';border:1px solid '+(en.id===ed.id?en.c:"rgba(255,255,255,.04)")+';color:'+(en.id===ed.id?en.c:"rgba(255,255,255,.15)")+';font-weight:'+(en.id===ed.id?"700":"400")+'">'+(en.id===ed.id?en.t:"???")+'</span>';});
+
+  inn.innerHTML=confetti+'<div style="font-size:9px;letter-spacing:5px;color:'+ed.c+';font-weight:700;margin-bottom:5px">'+ed.sub+' ENDING</div><div style="font-size:50px;margin-bottom:8px">'+ed.e+'</div><h1 style="font-size:26px;font-weight:900;margin-bottom:5px;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+ed.t+'</h1><div style="margin:12px 0;padding:10px 20px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08);display:inline-block"><div style="font-size:9px;color:var(--ts);letter-spacing:2px;margin-bottom:4px">'+(G.gender==="male"?"🕺 YOUR BOY GROUP":"💃 YOUR GIRL GROUP")+'</div><div style="font-size:28px;font-weight:900;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px">'+G.name+'</div></div><div style="margin:10px auto;display:inline-block;padding:6px 16px;border-radius:100px;background:'+ed.c+'15;border:1px solid '+ed.c+'30"><span style="font-size:13px;font-weight:900;color:'+ed.c+'">'+ed.lb+'</span></div><div style="margin:8px auto;display:flex;align-items:center;justify-content:center;gap:10px"><div style="font-size:9px;letter-spacing:2px;color:var(--ts)">PRODUCER RATING</div><div style="font-size:28px;font-weight:900;color:'+rc+';text-shadow:0 0 15px '+rc+'60">'+rat+'</div><div style="font-size:11px;color:var(--ts)">('+t+'万)</div></div><div style="margin:10px auto;padding:12px 16px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);max-width:320px"><div style="font-size:10px;letter-spacing:3px;color:var(--ag);font-weight:700;margin-bottom:6px">🌍 全球偶像制作人排名</div><div style="font-size:22px;font-weight:900;color:var(--ay);margin-bottom:3px">超越了 '+rank.pct+'% 的制作人</div><div style="font-size:11px;color:var(--ts)">你的段位：<span style="color:var(--ag);font-weight:700">'+rank.title+'</span></div><div style="margin-top:6px;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:'+rank.pct+'%;height:100%;background:linear-gradient(90deg,var(--ag),var(--ac));border-radius:3px"></div></div></div><p style="font-size:12px;color:var(--ts);line-height:1.7;margin-bottom:10px">'+ed.d+'</p><div id="statsPlace"></div><div class="ce" style="background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin:10px 0 14px;border:1px solid '+ed.c+'20;text-align:left"><div style="font-size:9px;letter-spacing:2px;color:'+ed.c+';margin-bottom:5px;font-weight:700">后日谈 EPILOGUE</div><p style="font-size:11px;color:var(--ts);line-height:1.7">'+ed.ex+'</p></div><div style="background:rgba(255,255,255,.02);border-radius:11px;padding:8px 12px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)"><div style="font-size:8px;letter-spacing:2px;color:var(--ag);margin-bottom:5px;font-weight:700">🏆 结局收集 1/28</div><div style="display:flex;flex-wrap:wrap;gap:3px;justify-content:center">'+endsGrid+'</div></div><a class="cta" href="https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol" target="_blank" rel="noopener noreferrer">🎵 给你的偶像团队写出道曲</a><div style="display:flex;gap:8px;margin-top:10px"><button id="restartBtn" style="flex:1;background:rgba(255,255,255,.05);color:var(--tp);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🔄 重新企划</button><button id="shareBtn" style="flex:1;background:'+ed.g+';color:#000;border:none;padding:12px;border-radius:100px;font-size:12px;font-weight:900;cursor:pointer;font-family:inherit">📤 生成分享图</button></div><div style="margin-top:24px;font-size:8px;color:rgba(255,255,255,.1);letter-spacing:2px">MADE WITH 🤫 BY 嘘掌门</div>';
+
+  p.appendChild(inn);app.appendChild(p);
+  setTimeout(function(){
+    var sp=$("statsPlace");if(sp)sp.appendChild(renderStats(false));
+    $("restartBtn").onclick=function(){G={gender:null,name:"",stats:{f:0,p:0,c:0},screen:"intro",evts1:[],evts2:[],evts3:[],curEvt:0,evtResults:[],choices:{identity:"",strategy:"",training:"",style:"",debut:"",fanops:"",year2:"",year3:""},bond:0};go("intro");};
+    $("shareBtn").onclick=function(){
+      var btn=$("shareBtn");btn.textContent="生成中...";btn.disabled=true;
+      generateShareImage(ed,rat,t,function(dataUrl){
+        // Create download/preview
+        var overlay=document.createElement("div");
+        overlay.style.cssText="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;";
+        var img=document.createElement("img");
+        img.src=dataUrl;img.style.cssText="max-width:90%;max-height:70vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);";
+        overlay.appendChild(img);
+        var tip=document.createElement("div");
+        tip.style.cssText="color:#aaa;font-size:12px;margin-top:16px;text-align:center;line-height:1.8;";
+        tip.textContent="长按图片保存 · 分享给好友来挑战";
+        overlay.appendChild(tip);
+        var btnRow=document.createElement("div");btnRow.style.cssText="display:flex;gap:10px;margin-top:12px;";
+        var dlBtn=document.createElement("a");dlBtn.href=dataUrl;dlBtn.download="idol-producer-"+G.name+".png";
+        dlBtn.style.cssText="background:var(--ag);color:#000;padding:10px 24px;border-radius:100px;font-size:13px;font-weight:900;text-decoration:none;font-family:inherit;";
+        dlBtn.textContent="💾 保存图片";btnRow.appendChild(dlBtn);
+        var closeBtn=document.createElement("button");
+        closeBtn.style.cssText="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:10px 24px;border-radius:100px;font-size:13px;cursor:pointer;font-family:inherit;";
+        closeBtn.textContent="✕ 关闭";closeBtn.onclick=function(){overlay.remove();btn.textContent="📤 生成分享图";btn.disabled=false;};
+        btnRow.appendChild(closeBtn);overlay.appendChild(btnRow);
+        document.body.appendChild(overlay);
+      });
+    };
+  },100);
+}
+
+// -- INIT --
+render();
+
+</script>
+</body>
+</html>
