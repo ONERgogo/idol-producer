@@ -23,11 +23,13 @@ body{font-family:'Noto Sans SC',-apple-system,sans-serif;background:var(--bg);co
 .page{min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:70px 18px 40px;position:relative}
 .page.hs{padding-bottom:145px}.page.intro{justify-content:center;padding:40px 18px}
 .inn{width:100%;max-width:420px}
-.btn{width:100%;text-align:left;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);border-radius:13px;padding:11px 13px;cursor:pointer;transition:all .3s;color:var(--tp);position:relative;overflow:hidden;display:flex;gap:9px;align-items:flex-start;font-family:inherit;font-size:13px}
-.btn:hover,.btn:active{background:rgba(255,255,255,.06);border-color:var(--ag);transform:translateY(-2px);box-shadow:0 0 20px rgba(204,255,0,.08)}
-.btn .be{font-size:20px;flex-shrink:0;line-height:1}.btn .bt{font-weight:900;font-size:13px;margin-bottom:2px;color:var(--tp)}
-.btn:hover .bt{color:var(--ag)}.btn .bd{font-size:11px;color:var(--ts);line-height:1.4}
-.btn .bg2{font-size:10px;margin-top:4px;font-style:italic;opacity:.8;color:var(--ag)}
+.btn{width:100%;text-align:left;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .3s;color:var(--tp);position:relative;overflow:hidden;display:flex;gap:10px;align-items:flex-start;font-family:inherit;font-size:15px}
+.btn:active{background:rgba(255,255,255,.06);border-color:var(--ag);transform:translateY(-2px);box-shadow:0 0 20px rgba(204,255,0,.08)}
+@media(hover:hover){.btn:hover{background:rgba(255,255,255,.06);border-color:var(--ag);transform:translateY(-2px);box-shadow:0 0 20px rgba(204,255,0,.08)}}
+.btn .be{font-size:24px;flex-shrink:0;line-height:1}.btn .bt{font-weight:900;font-size:15px;margin-bottom:3px;color:var(--tp)}
+.btn:active .bt{color:var(--ag)}
+@media(hover:hover){.btn:hover .bt{color:var(--ag)}}.btn .bd{font-size:13px;color:var(--ts);line-height:1.5}
+.btn .bg2{font-size:12px;margin-top:5px;font-style:italic;opacity:.8;color:var(--ag)}
 .choices{display:flex;flex-direction:column;gap:7px}
 .pbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.9);backdrop-filter:blur(10px)}
 .pfill{height:3px;background:linear-gradient(90deg,var(--ag),var(--ac),var(--ap));transition:width .6s cubic-bezier(.16,1,.3,1);box-shadow:0 0 15px #ccff0080}
@@ -313,6 +315,18 @@ function addS(s){
   if(s.addBond)G.bond=G.bond+(s.addBond||0);
 }
 
+
+// roundRect polyfill for older mobile browsers
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    if(typeof r==="number")r={tl:r,tr:r,br:r,bl:r};
+    this.beginPath();this.moveTo(x+r.tl,y);this.lineTo(x+w-r.tr,y);
+    this.quadraticCurveTo(x+w,y,x+w,y+r.tr);this.lineTo(x+w,y+h-r.br);
+    this.quadraticCurveTo(x+w,y+h,x+w-r.br,y+h);this.lineTo(x+r.bl,y+h);
+    this.quadraticCurveTo(x,y+h,x,y+h-r.bl);this.lineTo(x,y+r.tl);
+    this.quadraticCurveTo(x,y,x+r.tl,y);this.closePath();return this;
+  };
+}
 // Canvas share image generation
 function generateShareImage(ed,rat,total,cb){
   var W=750,H=1334;
@@ -447,14 +461,14 @@ function makeBtn(item,color,cb){
   var b=h("button","btn ce");
   b.style.borderColor="rgba(255,255,255,.08)";
   b.innerHTML='<span class="be">'+item.e+'</span><div style="flex:1;min-width:0"><div class="bt">'+item.t+'</div>'+(item.d?'<div class="bd">'+item.d+'</div>':'')+(item.g?'<div class="bg2" style="color:'+color+'">'+item.g+'</div>':'')+'</div>';
-  b.onmouseenter=function(){b.style.borderColor=color;};
-  b.onmouseleave=function(){b.style.borderColor="rgba(255,255,255,.08)";};
+  
+  
   b.onclick=function(){if(cb)cb(item);};
   return b;
 }
 function renderHeader(num,title,sub){
   var d=h("div","ce");d.style.textAlign="center";d.style.marginBottom="16px";
-  d.innerHTML='<div style="font-size:10px;letter-spacing:5px;color:var(--ag);font-weight:700;margin-bottom:5px">STAGE '+String(num).padStart(2,"0")+'</div><h2 style="font-size:22px;font-weight:900;line-height:1.2;background:linear-gradient(135deg,#fff,var(--ag));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px">'+title+'</h2>'+(sub?'<p style="font-size:11px;color:var(--ts);line-height:1.5;max-width:320px;margin:0 auto">'+sub+'</p>':'');
+  d.innerHTML='<div style="font-size:13px;letter-spacing:5px;color:var(--ag);font-weight:700;margin-bottom:5px">STAGE '+String(num).padStart(2,"0")+'</div><h2 style="font-size:26px;font-weight:900;line-height:1.2;background:linear-gradient(135deg,#fff,var(--ag));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px">'+title+'</h2>'+(sub?'<p style="font-size:14px;color:var(--ts);line-height:1.5;max-width:320px;margin:0 auto">'+sub+'</p>':'');
   return d;
 }
 function renderProgress(){
@@ -464,7 +478,7 @@ function renderProgress(){
 function renderBottomStats(){
   var d=h("div","bstats");
   var inner=h("div","bsi");
-  inner.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:9px;letter-spacing:1px;color:var(--ts)">'+(G.gender==="male"?"🕺":"💃")+' '+G.name+'</span><span style="font-size:9px;letter-spacing:1px;color:var(--ag);font-weight:700">TOTAL: '+(G.stats.f+G.stats.p+G.stats.c)+'万'+(G.bond>0?' · 💕羁绊:'+G.bond:'')+'</span></div>';
+  inner.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;letter-spacing:1px;color:var(--ts)">'+(G.gender==="male"?"🕺":"💃")+' '+G.name+'</span><span style="font-size:12px;letter-spacing:1px;color:var(--ag);font-weight:700">TOTAL: '+(G.stats.f+G.stats.p+G.stats.c)+'万'+(G.bond>0?' · 💕羁绊:'+G.bond:'')+'</span></div>';
   inner.appendChild(renderStats(true));
   d.appendChild(inner);
   return d;
@@ -506,7 +520,7 @@ function render(){
 
 function renderIntro(app){
   var p=h("div","page intro");
-  p.innerHTML='<div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(204,255,0,.05),transparent 50%);animation:pl 4s ease infinite"></div><div class="ce" style="text-align:center;position:relative;z-index:1"><div style="font-size:12px;letter-spacing:8px;color:var(--ag);font-weight:700;margin-bottom:12px">QQ音乐 × 金牌制作人</div><div style="font-size:10px;letter-spacing:4px;color:var(--ts);margin-bottom:24px">INTERACTIVE IDOL SIMULATOR</div><h1 style="font-size:30px;font-weight:900;line-height:1.15;margin-bottom:10px"><span style="color:var(--ag)">从零开始</span>的<br><span class="gt" style="display:inline-block">偶像企划</span></h1><p style="font-size:11px;color:var(--ts);line-height:1.8;max-width:280px;margin:0 auto 32px">你将以制作人身份，用三年时间<br>亲手打造一个偶像团体。<br><span style="color:var(--ap);font-size:10px">⚠️ 娱乐圈没有后悔药</span></p><button id="startBtn" style="background:var(--ag);color:#000;border:none;padding:13px 40px;border-radius:100px;font-size:14px;font-weight:900;cursor:pointer;letter-spacing:2px;box-shadow:0 0 40px #ccff004d,0 10px 40px #ccff0033;font-family:inherit">开始企划 →</button><div style="margin-top:36px;font-size:9px;color:rgba(255,255,255,.15);letter-spacing:2px;line-height:1.8">12 STAGES · 3 YEARS · 20 EVENTS · 15 ENDINGS</div></div>';
+  p.innerHTML='<div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(204,255,0,.05),transparent 50%);animation:pl 4s ease infinite"></div><div class="ce" style="text-align:center;position:relative;z-index:1"><div style="font-size:15px;letter-spacing:8px;color:var(--ag);font-weight:700;margin-bottom:12px">QQ音乐 × 金牌制作人</div><div style="font-size:13px;letter-spacing:4px;color:var(--ts);margin-bottom:24px">INTERACTIVE IDOL SIMULATOR</div><h1 style="font-size:34px;font-weight:900;line-height:1.15;margin-bottom:10px"><span style="color:var(--ag)">从零开始</span>的<br><span class="gt" style="display:inline-block">偶像企划</span></h1><p style="font-size:14px;color:var(--ts);line-height:1.8;max-width:280px;margin:0 auto 32px">你将以制作人身份，用三年时间<br>亲手打造一个偶像团体。<br><span style="color:var(--ap);font-size:13px">⚠️ 娱乐圈没有后悔药</span></p><button id="startBtn" style="background:var(--ag);color:#000;border:none;padding:13px 40px;border-radius:100px;font-size:16px;font-weight:900;cursor:pointer;letter-spacing:2px;box-shadow:0 0 40px #ccff004d,0 10px 40px #ccff0033;font-family:inherit">开始企划 →</button><div style="margin-top:36px;font-size:12px;color:rgba(255,255,255,.15);letter-spacing:2px;line-height:1.8">12 STAGES · 3 YEARS · 20 EVENTS · 15 ENDINGS</div></div>';
   app.appendChild(p);
   setTimeout(function(){$("startBtn").onclick=function(){go("genesis");};},100);
 }
@@ -520,7 +534,7 @@ function renderGenesis(app){
     var b2=makeBtn({e:"💃",t:"限定女团",d:"颜值即正义，实力被低估的永恒困境",g:"「姐姐好美好飒！」"},"var(--ap)",function(){G.gender="female";go("genesis");});
     ch.appendChild(b1);ch.appendChild(b2);inn.appendChild(ch);
   }else{
-    inn.innerHTML='<div class="ce" style="text-align:center"><div style="margin-bottom:24px"><div style="display:inline-block;padding:5px 14px;border-radius:100px;background:'+(G.gender==="male"?"rgba(0,245,255,.1)":"rgba(255,45,120,.1)")+';color:'+(G.gender==="male"?"var(--ac)":"var(--ap)")+';font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:18px">'+(G.gender==="male"?"🕺 限定男团":"💃 限定女团")+'</div><h2 style="font-size:22px;font-weight:900;margin-bottom:6px">给你的团取个名字</h2><p style="font-size:11px;color:var(--ts)">一个响亮的名字，是出圈的第一步</p></div><div style="position:relative;margin-bottom:18px"><input id="nameInput" placeholder="输入团名..." maxlength="20" style="width:100%;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;font-size:18px;font-weight:900;color:var(--tp);text-align:center;outline:none;font-family:inherit;animation:bg 3s ease infinite"><div id="nameCount" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--ts)">0/20</div></div><button id="confirmBtn" disabled style="background:rgba(255,255,255,.05);color:var(--ts);border:none;padding:12px 36px;border-radius:100px;font-size:13px;font-weight:900;cursor:not-allowed;letter-spacing:2px;font-family:inherit">确认出道 →</button></div>';
+    inn.innerHTML='<div class="ce" style="text-align:center"><div style="margin-bottom:24px"><div style="display:inline-block;padding:5px 14px;border-radius:100px;background:'+(G.gender==="male"?"rgba(0,245,255,.1)":"rgba(255,45,120,.1)")+';color:'+(G.gender==="male"?"var(--ac)":"var(--ap)")+';font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:18px">'+(G.gender==="male"?"🕺 限定男团":"💃 限定女团")+'</div><h2 style="font-size:26px;font-weight:900;margin-bottom:6px">给你的团取个名字</h2><p style="font-size:14px;color:var(--ts)">一个响亮的名字，是出圈的第一步</p></div><div style="position:relative;margin-bottom:18px"><input id="nameInput" placeholder="输入团名..." maxlength="20" style="width:100%;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;font-size:20px;font-weight:900;color:var(--tp);text-align:center;outline:none;font-family:inherit;animation:bg 3s ease infinite"><div id="nameCount" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--ts)">0/20</div></div><button id="confirmBtn" disabled style="background:rgba(255,255,255,.05);color:var(--ts);border:none;padding:12px 36px;border-radius:100px;font-size:16px;font-weight:900;cursor:not-allowed;letter-spacing:2px;font-family:inherit">确认出道 →</button></div>';
     setTimeout(function(){
       var inp=$("nameInput"),btn=$("confirmBtn"),cnt=$("nameCount");
       inp.focus();
@@ -573,7 +587,7 @@ function renderEvents(app,num,events,onDone){
     var oldBS=app2.querySelector(".bstats");if(oldBS)oldBS.remove();
     var ev=events[G.curEvt];
     var p=h("div","page hs");var inn=h("div","inn ce");
-    inn.innerHTML='<div style="text-align:center;margin-bottom:14px"><div style="font-size:10px;letter-spacing:4px;color:var(--ap);margin-bottom:5px;font-weight:700">STAGE '+String(num).padStart(2,"0")+' — EVENT '+(G.curEvt+1)+'/'+events.length+'</div><div class="nbadge"><span>'+ev.i+'</span><span>BREAKING NEWS</span></div></div><div class="ecard"><div style="font-size:30px;margin-bottom:6px">'+ev.e+'</div><div style="font-size:16px;font-weight:900;color:var(--ap);margin-bottom:6px">'+ev.t+'</div><div style="font-size:11px;color:var(--ts);line-height:1.6">'+ev.d+'</div></div><div style="font-size:10px;letter-spacing:2px;color:var(--ts);text-align:center;margin-bottom:7px;font-weight:700">你的决策</div>';
+    inn.innerHTML='<div style="text-align:center;margin-bottom:14px"><div style="font-size:13px;letter-spacing:4px;color:var(--ap);margin-bottom:5px;font-weight:700">STAGE '+String(num).padStart(2,"0")+' — EVENT '+(G.curEvt+1)+'/'+events.length+'</div><div class="nbadge"><span>'+ev.i+'</span><span>BREAKING NEWS</span></div></div><div class="ecard"><div style="font-size:34px;margin-bottom:6px">'+ev.e+'</div><div style="font-size:18px;font-weight:900;color:var(--ap);margin-bottom:6px">'+ev.t+'</div><div style="font-size:14px;color:var(--ts);line-height:1.6">'+ev.d+'</div></div><div style="font-size:13px;letter-spacing:2px;color:var(--ts);text-align:center;margin-bottom:7px;font-weight:700">你的决策</div>';
     var ch2=h("div","choices");
     var CC=["var(--ac)","var(--ao)","var(--au)"];
     ev.ch.forEach(function(c,i){
@@ -585,8 +599,8 @@ function renderEvents(app,num,events,onDone){
         else{setTimeout(function(){onDone();},900);}
       });
       b.style.borderColor="rgba(255,255,255,.08)";
-      b.onmouseenter=function(){b.style.borderColor=CC[i];};
-      b.onmouseleave=function(){b.style.borderColor="rgba(255,255,255,.08)";};
+      
+      
       ch2.appendChild(b);
     });
     inn.appendChild(ch2);p.appendChild(inn);
@@ -611,7 +625,7 @@ function showToast(s){
   items.forEach(function(it){
     var v=s[it.k]||0;if(!v)return;hasAny=true;
     var d=h("div","",true);d.style.textAlign="center";
-    d.innerHTML='<div style="font-size:12px">'+it.e+'</div><div style="font-size:12px;font-weight:900;color:'+(v>0?"var(--ag)":"var(--ap)")+'">'+(v>0?"+":"")+v+'</div>';
+    d.innerHTML='<div style="font-size:15px">'+it.e+'</div><div style="font-size:15px;font-weight:900;color:'+(v>0?"var(--ag)":"var(--ap)")+'">'+(v>0?"+":"")+v+'</div>';
     t.appendChild(d);
   });
   if(!hasAny)return;
@@ -632,9 +646,9 @@ function renderEnding(app){
   if(ed.id==="god"){for(var i=0;i<20;i++){confetti+='<div style="position:fixed;left:'+Math.random()*100+'%;top:-5%;width:'+(4+Math.random()*6)+'px;height:'+(4+Math.random()*6)+'px;border-radius:'+(Math.random()>.5?"50%":"2px")+';background:'+["var(--ag)","var(--ap)","var(--ac)","var(--ay)","var(--au)"][i%5]+';animation:cf '+(2+Math.random()*3)+'s linear '+(Math.random()*2)+'s infinite;opacity:.5"></div>';}}
 
   var endsGrid="";
-  ENDS.forEach(function(en){endsGrid+='<span style="font-size:9px;padding:2px 6px;border-radius:5px;background:'+(en.id===ed.id?"rgba(255,255,255,.1)":"rgba(255,255,255,.02)")+';border:1px solid '+(en.id===ed.id?en.c:"rgba(255,255,255,.04)")+';color:'+(en.id===ed.id?en.c:"rgba(255,255,255,.15)")+';font-weight:'+(en.id===ed.id?"700":"400")+'">'+(en.id===ed.id?en.t:"???")+'</span>';});
+  ENDS.forEach(function(en){endsGrid+='<span style="font-size:12px;padding:2px 6px;border-radius:5px;background:'+(en.id===ed.id?"rgba(255,255,255,.1)":"rgba(255,255,255,.02)")+';border:1px solid '+(en.id===ed.id?en.c:"rgba(255,255,255,.04)")+';color:'+(en.id===ed.id?en.c:"rgba(255,255,255,.15)")+';font-weight:'+(en.id===ed.id?"700":"400")+'">'+(en.id===ed.id?en.t:"???")+'</span>';});
 
-  inn.innerHTML=confetti+'<div style="font-size:9px;letter-spacing:5px;color:'+ed.c+';font-weight:700;margin-bottom:5px">'+ed.sub+' ENDING</div><div style="font-size:50px;margin-bottom:8px">'+ed.e+'</div><h1 style="font-size:26px;font-weight:900;margin-bottom:5px;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+ed.t+'</h1><div style="margin:12px 0;padding:10px 20px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08);display:inline-block"><div style="font-size:9px;color:var(--ts);letter-spacing:2px;margin-bottom:4px">'+(G.gender==="male"?"🕺 YOUR BOY GROUP":"💃 YOUR GIRL GROUP")+'</div><div style="font-size:28px;font-weight:900;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px">'+G.name+'</div></div><div style="margin:10px auto;display:inline-block;padding:6px 16px;border-radius:100px;background:'+ed.c+'15;border:1px solid '+ed.c+'30"><span style="font-size:13px;font-weight:900;color:'+ed.c+'">'+ed.lb+'</span></div><div style="margin:8px auto;display:flex;align-items:center;justify-content:center;gap:10px"><div style="font-size:9px;letter-spacing:2px;color:var(--ts)">PRODUCER RATING</div><div style="font-size:28px;font-weight:900;color:'+rc+';text-shadow:0 0 15px '+rc+'60">'+rat+'</div><div style="font-size:11px;color:var(--ts)">('+t+'万)</div></div><div style="margin:10px auto;padding:12px 16px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);max-width:320px"><div style="font-size:10px;letter-spacing:3px;color:var(--ag);font-weight:700;margin-bottom:6px">🌍 全球偶像制作人排名</div><div style="font-size:22px;font-weight:900;color:var(--ay);margin-bottom:3px">超越了 '+rank.pct+'% 的制作人</div><div style="font-size:11px;color:var(--ts)">你的段位：<span style="color:var(--ag);font-weight:700">'+rank.title+'</span></div><div style="margin-top:6px;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:'+rank.pct+'%;height:100%;background:linear-gradient(90deg,var(--ag),var(--ac));border-radius:3px"></div></div></div><p style="font-size:12px;color:var(--ts);line-height:1.7;margin-bottom:10px">'+ed.d+'</p><div id="statsPlace"></div><div class="ce" style="background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin:10px 0 14px;border:1px solid '+ed.c+'20;text-align:left"><div style="font-size:9px;letter-spacing:2px;color:'+ed.c+';margin-bottom:5px;font-weight:700">后日谈 EPILOGUE</div><p style="font-size:11px;color:var(--ts);line-height:1.7">'+ed.ex+'</p></div><div style="background:rgba(255,255,255,.02);border-radius:11px;padding:8px 12px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)"><div style="font-size:8px;letter-spacing:2px;color:var(--ag);margin-bottom:5px;font-weight:700">🏆 结局收集 1/28</div><div style="display:flex;flex-wrap:wrap;gap:3px;justify-content:center">'+endsGrid+'</div></div><a class="cta" href="https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol" target="_blank" rel="noopener noreferrer">🎵 给你的偶像团队写出道曲</a><div style="display:flex;gap:8px;margin-top:10px"><button id="restartBtn" style="flex:1;background:rgba(255,255,255,.05);color:var(--tp);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🔄 重新企划</button><button id="shareBtn" style="flex:1;background:'+ed.g+';color:#000;border:none;padding:12px;border-radius:100px;font-size:12px;font-weight:900;cursor:pointer;font-family:inherit">📤 生成分享图</button></div><div style="margin-top:24px;font-size:8px;color:rgba(255,255,255,.1);letter-spacing:2px">MADE WITH 🤫 BY 嘘掌门</div>';
+  inn.innerHTML=confetti+'<div style="font-size:12px;letter-spacing:5px;color:'+ed.c+';font-weight:700;margin-bottom:5px">'+ed.sub+' ENDING</div><div style="font-size:56px;margin-bottom:8px">'+ed.e+'</div><h1 style="font-size:30px;font-weight:900;margin-bottom:5px;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+ed.t+'</h1><div style="margin:12px 0;padding:10px 20px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08);display:inline-block"><div style="font-size:12px;color:var(--ts);letter-spacing:2px;margin-bottom:4px">'+(G.gender==="male"?"🕺 YOUR BOY GROUP":"💃 YOUR GIRL GROUP")+'</div><div style="font-size:32px;font-weight:900;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px">'+G.name+'</div></div><div style="margin:10px auto;display:inline-block;padding:6px 16px;border-radius:100px;background:'+ed.c+'15;border:1px solid '+ed.c+'30"><span style="font-size:16px;font-weight:900;color:'+ed.c+'">'+ed.lb+'</span></div><div style="margin:8px auto;display:flex;align-items:center;justify-content:center;gap:10px"><div style="font-size:12px;letter-spacing:2px;color:var(--ts)">PRODUCER RATING</div><div style="font-size:32px;font-weight:900;color:'+rc+';text-shadow:0 0 15px '+rc+'60">'+rat+'</div><div style="font-size:14px;color:var(--ts)">('+t+'万)</div></div><div style="margin:10px auto;padding:12px 16px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);max-width:320px"><div style="font-size:13px;letter-spacing:3px;color:var(--ag);font-weight:700;margin-bottom:6px">🌍 全球偶像制作人排名</div><div style="font-size:26px;font-weight:900;color:var(--ay);margin-bottom:3px">超越了 '+rank.pct+'% 的制作人</div><div style="font-size:14px;color:var(--ts)">你的段位：<span style="color:var(--ag);font-weight:700">'+rank.title+'</span></div><div style="margin-top:6px;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:'+rank.pct+'%;height:100%;background:linear-gradient(90deg,var(--ag),var(--ac));border-radius:3px"></div></div></div><p style="font-size:15px;color:var(--ts);line-height:1.7;margin-bottom:10px">'+ed.d+'</p><div id="statsPlace"></div><div class="ce" style="background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin:10px 0 14px;border:1px solid '+ed.c+'20;text-align:left"><div style="font-size:12px;letter-spacing:2px;color:'+ed.c+';margin-bottom:5px;font-weight:700">后日谈 EPILOGUE</div><p style="font-size:14px;color:var(--ts);line-height:1.7">'+ed.ex+'</p></div><div style="background:rgba(255,255,255,.02);border-radius:11px;padding:8px 12px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)"><div style="font-size:11px;letter-spacing:2px;color:var(--ag);margin-bottom:5px;font-weight:700">🏆 结局收集 1/28</div><div style="display:flex;flex-wrap:wrap;gap:3px;justify-content:center">'+endsGrid+'</div></div><a class="cta" href="https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol" target="_blank" rel="noopener noreferrer">🎵 给你的偶像团队写出道曲</a><div style="display:flex;gap:8px;margin-top:10px"><button id="restartBtn" style="flex:1;background:rgba(255,255,255,.05);color:var(--tp);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🔄 重新企划</button><button id="shareBtn" style="flex:1;background:'+ed.g+';color:#000;border:none;padding:12px;border-radius:100px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit">📤 生成分享图</button></div><div style="margin-top:24px;font-size:11px;color:rgba(255,255,255,.1);letter-spacing:2px">MADE WITH 🤫 BY 嘘掌门</div>';
 
   p.appendChild(inn);app.appendChild(p);
   setTimeout(function(){
@@ -642,27 +656,30 @@ function renderEnding(app){
     $("restartBtn").onclick=function(){G={gender:null,name:"",stats:{f:0,p:0,c:0},screen:"intro",evts1:[],evts2:[],evts3:[],curEvt:0,evtResults:[],choices:{identity:"",strategy:"",training:"",style:"",debut:"",fanops:"",year2:"",year3:""},bond:0};go("intro");};
     $("shareBtn").onclick=function(){
       var btn=$("shareBtn");btn.textContent="生成中...";btn.disabled=true;
-      generateShareImage(ed,rat,t,function(dataUrl){
+      try{generateShareImage(ed,rat,t,function(dataUrl){
         // Create download/preview
         var overlay=document.createElement("div");
-        overlay.style.cssText="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;";
+        overlay.style.cssText="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;";
         var img=document.createElement("img");
-        img.src=dataUrl;img.style.cssText="max-width:90%;max-height:70vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);";
+        img.src=dataUrl;img.style.cssText="max-width:92%;max-height:65vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);-webkit-touch-callout:default;";
+        img.addEventListener("contextmenu",function(e){e.stopPropagation();});
         overlay.appendChild(img);
         var tip=document.createElement("div");
-        tip.style.cssText="color:#aaa;font-size:12px;margin-top:16px;text-align:center;line-height:1.8;";
-        tip.textContent="长按图片保存 · 分享给好友来挑战";
+        tip.style.cssText="color:#aaa;font-size:16px;margin-top:16px;text-align:center;line-height:1.8;";
+        tip.textContent="📱 长按图片可保存到相册";
         overlay.appendChild(tip);
         var btnRow=document.createElement("div");btnRow.style.cssText="display:flex;gap:10px;margin-top:12px;";
-        var dlBtn=document.createElement("a");dlBtn.href=dataUrl;dlBtn.download="idol-producer-"+G.name+".png";
-        dlBtn.style.cssText="background:var(--ag);color:#000;padding:10px 24px;border-radius:100px;font-size:13px;font-weight:900;text-decoration:none;font-family:inherit;";
+        var dlBtn=document.createElement("a");
+        try{var byteStr=atob(dataUrl.split(",")[1]);var ab=new ArrayBuffer(byteStr.length);var ia=new Uint8Array(ab);for(var bi=0;bi<byteStr.length;bi++)ia[bi]=byteStr.charCodeAt(bi);var blob=new Blob([ab],{type:"image/png"});dlBtn.href=URL.createObjectURL(blob);}catch(e2){dlBtn.href=dataUrl;}
+        dlBtn.download="idol-producer-"+G.name+".png";
+        dlBtn.style.cssText="background:var(--ag);color:#000;padding:10px 24px;border-radius:100px;font-size:16px;font-weight:900;text-decoration:none;font-family:inherit;";
         dlBtn.textContent="💾 保存图片";btnRow.appendChild(dlBtn);
         var closeBtn=document.createElement("button");
-        closeBtn.style.cssText="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:10px 24px;border-radius:100px;font-size:13px;cursor:pointer;font-family:inherit;";
+        closeBtn.style.cssText="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:10px 24px;border-radius:100px;font-size:16px;cursor:pointer;font-family:inherit;";
         closeBtn.textContent="✕ 关闭";closeBtn.onclick=function(){overlay.remove();btn.textContent="📤 生成分享图";btn.disabled=false;};
         btnRow.appendChild(closeBtn);overlay.appendChild(btnRow);
         document.body.appendChild(overlay);
-      });
+      });}catch(err){btn.textContent="📤 生成分享图";btn.disabled=false;alert("生成失败，请截图分享~");}
     };
   },100);
 }
