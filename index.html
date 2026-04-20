@@ -19,9 +19,9 @@ body{font-family:'Noto Sans SC',-apple-system,sans-serif;background:var(--bg);co
 .ce{animation:su .5s cubic-bezier(.16,1,.3,1) both}
 .gt{animation:gl .3s ease infinite}
 .no{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")}
-#app{min-height:100dvh;position:relative;transition:opacity .3s}
+#app{position:relative;transition:opacity .3s}
 .page{min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:70px 18px 40px;position:relative}
-.page.hs{padding-bottom:145px}.page.intro{justify-content:center;padding:40px 18px}
+.page.hs{padding-bottom:145px}.page.intro{justify-content:center;padding:40px 18px;height:100dvh;min-height:auto;overflow:hidden}
 .inn{width:100%;max-width:420px}
 .btn{width:100%;text-align:left;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .3s;color:var(--tp);position:relative;overflow:hidden;display:flex;gap:10px;align-items:flex-start;font-family:inherit;font-size:15px}
 .btn:active{background:rgba(255,255,255,.06);border-color:var(--ag);transform:translateY(-2px);box-shadow:0 0 20px rgba(204,255,0,.08)}
@@ -51,12 +51,17 @@ a.cta{display:block;width:100%;background:linear-gradient(135deg,var(--ag),var(-
 <script>
 var G={gender:null,name:"",stats:{f:0,p:0,c:0},screen:"intro",evts1:[],evts2:[],evts3:[],curEvt:0,evtResults:[],choices:{identity:"",strategy:"",training:"",style:"",debut:"",fanops:"",year2:"",year3:""},bond:0};
 
+// ===== 团名库（100+100） =====
+var MALE_NAMES = ["星火少年团","无限进化","超频计划","银河旅行者","零点光速","霓虹骑士","未来倒计时","风暴方程式","脉冲星少年","自由落体","时差少年团","破晓计划","光年之外","引力方舟","闪电男孩","音速轨道","海洋之子","晨星联盟","星河纪元","量子纠缠","赛博极光","数字游牧","像素骑兵","终点线少年","盛夏列车","极光信号","机械之心","时空折叠","潮汐脉搏","电波少年","风暴核心","极昼代码","追光猎手","银河信使","碎片拼图","平流层","深海坐标","磁场偏移","数据洪流","秘密频段","北纬三十度","黎明序曲","午夜图鉴","虚数空间","临界点","声波图谱","超导体","平行线","光谱少年","重力场","北冕座","飞行器","热带季风","极限呼吸","星座代号","沸点少年","折射率","脉冲矩阵","不眠之城","风雪无阻","霜降少年","云深不知处","山海志","青云渡","听风少年郎","剑雨江湖","鹤归辞","墨染青衫","烟火人间","千里江山","月下独酌","少年游","青梅煮酒","长安少年","洛水风华","无名江湖","玉门关","千灯会","江湖客","朝露辞","竹马少年","书剑缘","白驹过隙","风华录","落日行者","橙色警报","热带鱼","蓝色档案","黑白电影","绿茵场少年","橙光序章","金色麦浪","红色警戒","深海蓝调","紫罗兰","橙日计划","暮色银河","青花少年","灰烬复燃","烟霞少年","白鸟归巢"];
+var FEMALE_NAMES = ["蜜糖宇宙","星光派对","粉色代码","甜蜜脉冲","梦幻乐章","糖果银河","霓虹蝴蝶","星河少女","花火物语","月光公主","梦境调色盘","七色时光","闪耀计划","棉花糖乐队","星尘女孩","甜心节拍","薄荷少女","樱花代号","彩虹胶片","蝴蝶效应","奶油泡泡","琉璃时光","水晶蔷薇","香槟玫瑰","蜜桃乌龙","莓果季节","清晨露水","午夜香槟","森林物语","海风来信","云朵日记","糖霜少女","玫瑰密码","粉末星辰","气泡水少女","草莓夏令营","蓝莓派对","焦糖布丁","马卡龙时光","晴空万里","月见草","雏菊田园","山茶花开","夏日冰沙","橙花香氛","柠檬气泡","白桃气泡","雨后彩虹","青柠物语","蜜语花园","花瓣信使","糖果陷阱","兔耳朵少女","星子计划","梦蝶","莹火物语","晴天姐妹","蔷薇之约","花间词","青梅少女团","月下红妆","簪花少女","锦年华","浣花溪","采薇","桃夭","姝色","春山如画","青鸟传书","蓬莱少女","月神之眼","锦瑟年华","若水","芷兰计划","红玉少女","琉璃盏","落雁计划","飞花令","拾荒少女","橘子汽水","柠檬共和国","莓果联盟","薰衣草田","云朵棉花糖","水蜜桃宣言","玫瑰石英","粉色地平线","糖霜城堡","蓝色星期二","白桃苏打","樱桃轰炸机","紫藤花架","蔷薇骑士","木槿花开","雨林精灵","极光少女","星尘之舞","午夜玫瑰","琥珀物语","蓝莓夜曲","初雪物语"];
+function pickNames(){var src = G.gender==="male" ? MALE_NAMES : FEMALE_NAMES; var arr = src.slice(); for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var tmp=arr[i]; arr[i]=arr[j]; arr[j]=tmp;} return arr.slice(0,6);}
+
 var IDS=[
-{id:"rich",e:"💰",t:"追星成魔の富二代",d:"为偶像花了两千万应援，现在决定自己造一个。",g:"「用爱发电？不，用钱发电。」",s:{f:9,p:5,c:36}},
-{id:"tech",e:"🤖",t:"大厂离职の前高管",d:"把偶像产业当互联网项目跑。DAU、ROI张口就来。",g:"「我的KPI里没有感情这栏。」",s:{f:5,p:18,c:27}},
-{id:"poor",e:"🫠",t:"全靠贷款の纯情创业者",d:"信用卡刷爆三张，睡公司地板。生日只能送手写信。",g:"「今天的泡面，是梦想的味道。」",s:{f:27,p:9,c:0}},
-{id:"coal",e:"⛏️",t:"手握重金の传统资本",d:"矿上赚了几个亿，审美偏传统，喜欢让爱豆穿大红大绿去敬酒。",g:"「来来来，小张给王总唱一个！」",s:{f:0,p:22,c:40}},
-{id:"ex",e:"🎤",t:"选秀落选の前练习生",d:"差一票没出道，现在送别人上那个舞台。",g:"「我没站上的舞台，你们替我站。」",s:{f:22,p:5,c:9}}
+{id:"rich",e:"💰",t:"追星成魔的富二代",d:"为偶像花了两千万应援，现在决定自己造一个。",g:"「用爱发电？不，用钱发电。」",s:{f:9,p:5,c:36}},
+{id:"tech",e:"🤖",t:"大厂离职的前高管",d:"把偶像产业当互联网项目跑。DAU、ROI张口就来。",g:"「我的KPI里没有感情这栏。」",s:{f:5,p:18,c:27}},
+{id:"poor",e:"🫠",t:"白手起家的纯情创业者",d:"把全部积蓄投了进去，睡公司地板。生日只能送手写信。",g:"「今天的泡面，是梦想的味道。」",s:{f:27,p:9,c:0}},
+{id:"coal",e:"⛏️",t:"手握重金的传统资本",d:"矿上赚了几个亿，审美偏传统，喜欢让爱豆穿大红大绿上台表演。",g:"「来来来，小张给王总唱一个！」",s:{f:0,p:18,c:30}},
+{id:"ex",e:"🎤",t:"选秀落选的前练习生",d:"差一票没出道，现在送别人上那个舞台。",g:"「我没站上的舞台，你们替我站。」",s:{f:22,p:5,c:9}}
 ];
 var STRATS=[
 {id:"a",e:"🎸",t:"地下Livehouse刷脸起家",d:"100人小场子，一张票一个粉丝慢慢攒。",g:"死忠粉是这样炼成的",s:{f:25,p:-9,c:-9}},
@@ -77,7 +82,7 @@ var MUSICS=[
 {id:"b",e:"🍬",t:"甜系偶像流行曲",d:"糖分爆表的混血风，振付舞蹈+应援色。",g:"「比心～爱你们每一个人！」",s:{f:22,p:14,c:0}},
 {id:"c",e:"🎸",t:"乐队摇滚路线",d:"全员真乐器不对口型。",g:"「不需要伴奏带，给个电就行」",s:{f:18,p:9,c:-5}},
 {id:"d",e:"🎧",t:"电子赛博朋克概念",d:"Auto-Tune+合成器+概念MV。",g:"「下张专辑主题：量子纠缠」",s:{f:9,p:22,c:-5}},
-{id:"e",e:"🏮",t:"国风中国风",d:"古筝+笛子+Trap beat。官媒点赞。",g:"央视新闻转发了你们的MV",s:{f:9,p:27,c:5}}
+{id:"e",e:"🎋",t:"国风中国风",d:"古筝+笛子+Trap beat。权威媒体点赞。",g:"主流媒体转发了你们的MV",s:{f:9,p:27,c:5}}
 ];
 var DEBUTS=[
 {id:"a",e:"💿",t:"先发数字单曲试水",d:"平台独家首发，成本低风险低。",g:"「首日播放8万。评论区：这谁？」",s:{f:9,p:14,c:9}},
@@ -86,16 +91,16 @@ var DEBUTS=[
 {id:"d",e:"🎬",t:"重金拍电影级MV",d:"知名导演拍5分钟，成本500万。",g:"「#MV好看歌难听#」",s:{f:5,p:32,c:-12}}
 ];
 var FANS=[
-{id:"a",e:"💌",t:"会员制粉丝社区",d:"专属APP月费制。独家花絮+语音。",g:"「月费29.9，包含哥哥/姐姐说晚安」",s:{f:22,p:-14,c:18}},
+{id:"a",e:"💌",t:"会员制粉丝社区",d:"专属APP会员制。独家花絮+语音。",g:"「专属会员社区，解锁独家幕后花絮和练习室日常」",s:{f:22,p:-14,c:18}},
 {id:"b",e:"📱",t:"日更九宫格营业型",d:"天天自拍日常互动，人设立稳。",g:"「第48天，主唱发了第48张猫照」",s:{f:14,p:14,c:0}},
 {id:"c",e:"🎥",t:"长视频内容矩阵",d:"团综+练习室vlog+挑战视频。",g:"「练习室视频800万播放」",s:{f:14,p:18,c:-5}},
 {id:"d",e:"🔮",t:"神秘高冷极少营业",d:"一年只在演唱会见面。",g:"「上一条动态是73天前」",s:{f:-9,p:5,c:14}},
 {id:"e",e:"🎮",t:"粉丝共创投票决定一切",d:"歌名MV歌单全粉丝定。",g:"「粉丝投了首歌叫《我是你的小饼干》」",s:{f:22,p:0,c:-9}}
 ];
 var Y2=[
-{id:"a",e:"🌍",t:"开启全国巡演",d:"15城每场5000人。",g:"「第12场，舞担差点晕倒」",s:{f:22,p:18,c:14}},
-{id:"b",e:"🎬",t:"全员转型影视",d:"接电视剧电影。",g:"「他的演技让导演气哭了」",s:{f:-5,p:36,c:22}},
-{id:"c",e:"👥",t:"推子团/小分队",d:"按风格拆2-3个分队。",g:"「A队上春晚，B队团综，C队…直播带货」",s:{f:14,p:14,c:9}},
+{id:"a",e:"🌍",t:"开启全国巡演",d:"15城每场5000人。",g:"「第12场，舞担差点晕倒」",s:{f:18,p:14,c:14}},
+{id:"b",e:"🎬",t:"全员转型影视",d:"接电视剧电影。",g:"「他的演技让导演气哭了」",s:{f:-5,p:28,c:18}},
+{id:"c",e:"👥",t:"推子团/小分队",d:"按风格拆2-3个分队。",g:"「A队上跨年晚会，B队团综，C队…直播带货」",s:{f:14,p:14,c:9}},
 {id:"d",e:"🏢",t:"成立自己的厂牌",d:"开始招新练习生。",g:"「你有47个练习生，45个在摸鱼」",s:{f:9,p:27,c:-9}},
 {id:"e",e:"🏖️",t:"全员放假充电",d:"三个月假。有人进修有人消失了…",g:"「粉丝：他们是不是要解散？」",s:{f:-9,p:0,c:18}}
 ];
@@ -108,8 +113,8 @@ var Y3=[
 ];
 var EVTS=[
 {e:"📸",i:"🔥",t:"惊天大瓜！",d:"主舞被拍到和嫂子/姐夫深夜看电影。#XX塌房# 2小时8亿阅读。",ch:[{t:"发声明「剧本围读」+花钱压热搜",e:"💸",s:{f:-5,p:5,c:-7}},{t:"冷藏该成员铁腕治军",e:"❄️",s:{f:14,p:-14,c:0}},{t:"主动道歉+万字反省信",e:"😭",s:{f:5,p:14,c:2}}]},
-{e:"💥",i:"⚡",t:"队内霸凌罗生门！",d:"某成员凌晨3点微博秒删「我真的受够了」。0.5秒被疯传。",ch:[{t:"全员直播「相亲相爱一家人」",e:"🎭",s:{f:-14,p:14,c:2}},{t:"炒成「相爱相杀」大势CP",e:"💕",s:{f:22,p:-5,c:5}},{t:"被霸凌成员发vlog澄清",e:"🎥",s:{f:9,p:9,c:0}}]},
-{e:"🎵",i:"✨",t:"B面歌意外爆火！",d:"一首B-side被AI二创搞怪，抖音日播破2亿！",ch:[{t:"官方下场+推舞蹈挑战赛",e:"🕺",s:{f:14,p:27,c:14}},{t:"发律师函警告侵权",e:"📜",s:{f:-22,p:-14,c:5}},{t:"和AI创作者联名remix",e:"🤝",s:{f:18,p:22,c:9}}]},
+{e:"💥",i:"⚡",t:"队内霸凌罗生门！",d:"某成员凌晨3点社交平台秒删「我真的受够了」。0.5秒被疯传。",ch:[{t:"全员直播「相亲相爱一家人」",e:"🎭",s:{f:-14,p:14,c:2}},{t:"炒成「相爱相杀」的热门话题搭档",e:"💕",s:{f:22,p:-5,c:5}},{t:"被霸凌成员发vlog澄清",e:"🎥",s:{f:9,p:9,c:0}}]},
+{e:"🎵",i:"✨",t:"B面歌意外爆火！",d:"一首B-side被AI二创搞怪，短视频平台日播破2亿！",ch:[{t:"官方下场+推舞蹈挑战赛",e:"🕺",s:{f:14,p:27,c:14}},{t:"发律师函警告侵权",e:"📜",s:{f:-22,p:-14,c:5}},{t:"和AI创作者联名remix",e:"🤝",s:{f:18,p:22,c:9}}]},
 {e:"🌟",i:"💫",t:"C位想单飞！",d:"C位：「我觉得我可以solo了」。手里有别家offer。",ch:[{t:"含泪放手+培养替补",e:"👋",s:{f:-22,p:5,c:14}},{t:"加钱加资源不放人",e:"💰",s:{f:5,p:0,c:-15}},{t:"出联名曲做告别企划",e:"🎬",s:{f:14,p:22,c:0}}]},
 {e:"💔",i:"🧠",t:"成员心理健康危机！",d:"一位成员确诊中度抑郁症。医生建议休息半年。",ch:[{t:"立刻宣布暂休取消所有行程",e:"🏥",s:{f:27,p:22,c:-8}},{t:"对外说「身体不适」私下治疗",e:"🤫",s:{f:-5,p:5,c:0}},{t:"公开说明呼吁关注艺人心理健康",e:"📢",s:{f:22,p:32,c:2}}]},
 {e:"🤖",i:"🚨",t:"AI换脸危机！",d:"成员被AI换脸做不雅视频传播。情绪崩溃。",ch:[{t:"法律出击+心理辅导",e:"⚖️",s:{f:14,p:14,c:-7}},{t:"成员发声呼吁AI伦理",e:"📡",s:{f:18,p:27,c:2}},{t:"低调处理专注音乐",e:"🔇",s:{f:5,p:0,c:0}}]},
@@ -123,16 +128,16 @@ var EVTS=[
 {e:"👨‍👩‍👦",i:"📞",t:"成员父母来要人了！",d:"最小成员的妈妈直接打电话：「我孩子才17岁再不回来我去告你们！」#未成年偶像权益#上了热搜。",cond:{training:"a"},ch:[{t:"立刻安排回家一个月+承诺学业优先",e:"🏠",s:{f:18,p:14,c:-7}},{t:"请父母来公司参观展示培养计划",e:"🤝",s:{f:9,p:9,c:2}},{t:"签详细监护协议+给父母每月补贴",e:"💰",s:{f:-9,p:5,c:-11}}]},
 {e:"🎙️",i:"😬",t:"舞台划水质疑！",d:"直拍被放慢发现对口型！伴奏带AR被关掉现场一片车祸。",cond:{training:"b"},ch:[{t:"紧急安排线上清唱live回应",e:"🎤",s:{f:18,p:18,c:0}},{t:"发声明「正常表演辅助」",e:"📝",s:{f:-14,p:-18,c:3}},{t:"自嘲「被你们发现了明天苦练」",e:"😂",s:{f:14,p:14,c:0}}]},
 {e:"🎭",i:"🤢",t:"修音翻车现场！",d:"直播时未经修音的原声被全网听到。乐评人写了3000字分析。",cond:{training:"b"},ch:[{t:"紧急集训三个月+蜕变纪录片翻盘",e:"💪",s:{f:14,p:9,c:-7}},{t:"转型主打舞蹈和视觉",e:"🕺",s:{f:5,p:18,c:2}},{t:"直接发raw版live承认不足展示态度",e:"🎤",s:{f:22,p:14,c:0}}]},
-{e:"🗞️",i:"🖤",t:"对家恶意买黑通稿！",d:"一夜之间各大营销号同时发出黑料合集。真假参半越辟谣越热。",cond:{strategy:"b"},ch:[{t:"律师发函逐一起诉营销号",e:"⚖️",s:{f:9,p:9,c:-11}},{t:"买更多通稿反击+曝光对家",e:"💣",s:{f:14,p:-9,c:-7}},{t:"用新歌回应把黑料写成歌词",e:"🎵",s:{f:27,p:18,c:2}}]},
+{e:"🗞️",i:"🖤",t:"对家恶意买黑稿！",d:"一夜之间各大营销号同时发出黑料合集。真假参半越辟谣越热。",cond:{strategy:"b"},ch:[{t:"律师发函逐一起诉营销号",e:"⚖️",s:{f:9,p:9,c:-11}},{t:"联系更多媒体澄清事实+曝光对家",e:"💣",s:{f:14,p:-9,c:-7}},{t:"用新歌回应把黑料写成歌词",e:"🎵",s:{f:27,p:18,c:2}}]},
 {e:"💋",i:"💘",t:"恋情曝光！",d:"队长和某顶流约会被拍！有人在烧周边。",cond:{style:"b"},ch:[{t:"否认到底+拿出行程表",e:"🙅",s:{f:5,p:-14,c:2}},{t:"大方官宣「请大家祝福」",e:"💍",s:{f:-27,p:22,c:0}},{t:"不回应暗中准备新歌",e:"🤫",s:{f:-5,p:5,c:5}}]},
 {e:"📺",i:"🎬",t:"综艺名场面！",d:"成员被整蛊的反应截成表情包传遍全网！",cond:{strategy:"c"},ch:[{t:"综艺常驻+疯狂接通告",e:"🎪",s:{f:5,p:32,c:14}},{t:"只接高质量综艺",e:"🎯",s:{f:22,p:14,c:0}},{t:"全员团综主打团体笑点",e:"🤹",s:{f:14,p:22,c:5}}]},
-{e:"⚔️",i:"🔥",t:"粉圈大战爆发！",d:"你家粉丝和隔壁顶流因投票打起来了！站姐退圈三个。",cond:{fanops:"a"},ch:[{t:"官方呼吁理性追星",e:"🕊️",s:{f:-14,p:22,c:0}},{t:"暗中支持出征",e:"🏴",s:{f:22,p:-22,c:5}},{t:"趁乱发新歌抢热度",e:"🎵",s:{f:5,p:14,c:5}}]},
+{e:"⚔️",i:"🔥",t:"粉圈大战爆发！",d:"你家粉丝和隔壁顶流因投票打起来了！站姐退圈三个。",cond:{fanops:"a"},ch:[{t:"官方呼吁理性追星",e:"🕊️",s:{f:-14,p:22,c:0}},{t:"暗中引导粉丝增加曝光",e:"🏴",s:{f:22,p:-22,c:5}},{t:"趁乱发新歌抢热度",e:"🎵",s:{f:5,p:14,c:5}}]},
 {e:"😰",i:"🚫",t:"私生饭事件！",d:"私生饭潜入成员住所跟踪两周。成员不敢回家。",cond:{fanops:"a"},ch:[{t:"报警+搬家+升级安保",e:"🔒",s:{f:5,p:9,c:-11}},{t:"公开谴责+建反私生联盟",e:"📢",s:{f:14,p:22,c:-2}},{t:"低调处理",e:"🤫",s:{f:-5,p:0,c:-5}}]},
 {e:"😭",i:"📺",t:"成员直播情绪崩溃！",d:"一位成员直播突然哭了「我真的好累」。直播间从5万涨到50万。",cond:{fanops:"b"},ch:[{t:"立刻停工+全员放一周假",e:"🏥",s:{f:22,p:18,c:-11}},{t:"剪辑成感动物料趁热卖情怀",e:"📹",s:{f:-14,p:14,c:9}},{t:"安排心理辅导+发声明呼吁善待艺人",e:"💚",s:{f:18,p:27,c:-2}}]},
-{e:"🧴",i:"💸",t:"代言翻车！",d:"代言品牌被曝造假！不续约赔3000万。",cond:{identity:"coal"},ch:[{t:"壮士断腕解约！",e:"🔪",s:{f:22,p:14,c:-25}},{t:"假装没事等到期",e:"🙈",s:{f:-14,p:-5,c:5}},{t:"要求品牌整改变维权代言人",e:"📢",s:{f:14,p:27,c:5}}]},
-{e:"💸",i:"🏛️",t:"税务风波！",d:"自媒体爆料涉嫌阴阳合同。热搜写成偷税漏税。",cond:{identity:"coal"},ch:[{t:"配合调查+公开审计报告",e:"📊",s:{f:9,p:18,c:-7}},{t:"律师函+低调处理",e:"⚖️",s:{f:0,p:5,c:-2}},{t:"开直播展示纳税记录",e:"📱",s:{f:14,p:14,c:-2}}]},
+{e:"🧴",i:"💸",t:"代言翻车！",d:"代言品牌被曝产品质量争议！不续约赔3000万。",cond:{identity:"coal"},ch:[{t:"壮士断腕解约！",e:"🔪",s:{f:22,p:14,c:-25}},{t:"立刻发声明暂停合作，等待调查结果",e:"⏸️",s:{f:5,p:8,c:-5}},{t:"要求品牌整改变维权代言人",e:"📢",s:{f:14,p:27,c:5}}]},
+{e:"💸",i:"🏛️",t:"财务审计风波！",d:"公司被要求例行财务审计。有自媒体渲染为财务问题。",cond:{identity:"coal"},ch:[{t:"全面配合审计+主动公开合规报告",e:"📊",s:{f:9,p:18,c:-7}},{t:"律师函警告造谣自媒体",e:"⚖️",s:{f:0,p:5,c:-2}},{t:"聘请第三方审计机构发布合规报告",e:"📱",s:{f:14,p:14,c:-2}}]},
 {e:"🏚️",i:"💀",t:"公司要倒闭了！",d:"连续三个月入不敷出。工资拖欠两个月。你的银行卡余额：237.5元。",cond:{identity:"poor"},ch:[{t:"卖掉车和房子all in最后一搏",e:"🔥",s:{f:14,p:0,c:-29}},{t:"找投资人融资出让30%股份",e:"🏦",s:{f:0,p:9,c:27}},{t:"坦白告诉成员实情一起决定",e:"🤝",s:{f:27,p:9,c:-2}}]},
-{e:"🇨🇳",i:"🏆",t:"官方点名表演！",d:"你们的歌被选为大型国际赛事表演曲目！",cond:{style:"e"},ch:[{t:"闭关苦练一个月完美演出",e:"🎯",s:{f:14,p:36,c:-2}},{t:"趁机出周边联名商业最大化",e:"💰",s:{f:5,p:22,c:22}},{t:"婉拒「我们还没准备好」",e:"🙏",s:{f:9,p:-9,c:5}}]},
+{e:"🏆",i:"🏆",t:"官方点名表演！",d:"你们的歌被选为大型国际赛事表演曲目！",cond:{style:"e"},ch:[{t:"闭关苦练一个月完美演出",e:"🎯",s:{f:14,p:36,c:-2}},{t:"趁机出周边联名商业最大化",e:"💰",s:{f:5,p:22,c:22}},{t:"婉拒「我们还没准备好」",e:"🙏",s:{f:9,p:-9,c:5}}]},
 {e:"🎼",i:"⚠️",t:"抄袭风波！",d:"主打歌副歌和某海外歌曲高度相似！原作者INS发了「?」。",cond:{style:"e"},ch:[{t:"下架道歉+买原曲版权",e:"💰",s:{f:5,p:5,c:-15}},{t:"坚持巧合+音乐理论分析",e:"📊",s:{f:-9,p:-18,c:5}},{t:"请原作者feat.合作",e:"🤝",s:{f:14,p:22,c:-7}}]},
 {e:"🎪",i:"🚑",t:"演唱会事故！",d:"主唱从升降台摔下来了！视频传遍全网。",cond:{debut:"c"},ch:[{t:"终止演出+全额退票",e:"🏥",s:{f:22,p:22,c:-8}},{t:"带伤完成演出",e:"💪",s:{f:27,p:14,c:0}},{t:"其他成员轮流cover",e:"🤝",s:{f:27,p:5,c:2}}]},
 {e:"🎨",i:"🖼️",t:"视觉抄袭争议！",d:"新专辑封面被指和某国际艺术家作品高度相似。3小时5亿阅读。",cond:{debut:"d"},ch:[{t:"花重金买版权+全部重做视觉",e:"💰",s:{f:9,p:14,c:-20}},{t:"发声明强调创意撞车",e:"🙅",s:{f:-9,p:-18,c:5}},{t:"邀请原作者联名合作",e:"🤝",s:{f:14,p:27,c:-7}}]},
@@ -147,32 +152,32 @@ var EVTS=[
 var ENDS=[
 {id:"god",e:"👑",c:"#FFE500",g:"linear-gradient(135deg,#FFE500,#FF6B00 50%,#FF2D78)",t:"华语乐坛新纪元",sub:"LEGENDARY",lb:"「乐坛教父/教母」",d:"你的团登顶年榜TOP1，巡演全球售罄。业内封你造星之神。",ex:"📊 3.2亿人循环你们的歌。你已不是在造星——你在定义一个时代。",nd:"三维均高且总分极高"},
 {id:"idol",e:"🌟",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#A855F7)",t:"国民级养成传奇",sub:"IDOL KING",lb:"「偶像工业天花板」",d:"从十几岁养成到二十几岁，粉丝从学生变白领还在追。",ex:"🎓 十年了。练习室哭的小孩们站在了鸟巢。你完美平衡了情怀和商业。",nd:"粉丝黏性极高"},
-{id:"com",e:"🤡",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#CCFF00)",t:"国民级电子榨菜",sub:"COMEDY",lb:"「内娱最强画饼大师」",d:"唱跳不行综艺觉醒。表情包比歌曲播放量高100倍。",ex:"📱 春晚导演来电——不是唱歌是演小品。",nd:"路人盘高但粉丝少"},
+{id:"com",e:"🤡",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#CCFF00)",t:"国民级电子榨菜",sub:"COMEDY",lb:"「内娱最强画饼大师」",d:"唱跳不行综艺觉醒。表情包比歌曲播放量高100倍。",ex:"📱 某顶级晚会导演来电——不是唱歌是演小品。",nd:"路人盘高但粉丝少"},
 {id:"sell",e:"📦",c:"#FF6B00",g:"linear-gradient(135deg,#FF6B00,#FF2D78)",t:"糊作非为，直播带货",sub:"HUSTLE",lb:"「没有感情的赚钱机器」",d:"查无此团。全员直播间喊「9块9上车！」",ex:"🧻 GMV破亿。成员私下叫你纸巾大亨。",nd:"资本高但粉丝路人低"},
 {id:"farm",e:"🌾",c:"#CCFF00",g:"linear-gradient(135deg,#CCFF00,#00F5FF)",t:"回家种地/考公上岸",sub:"PEACE",lb:"「内娱清流」",d:"看破红尘。有人种草莓有人考公务员。",ex:"🍓 团没火但孩子们都很健康。你的奶茶店叫「前制作人的下午茶」。",nd:"总分低但没极端短板"},
-{id:"glo",e:"🌏",c:"#A855F7",g:"linear-gradient(135deg,#A855F7,#FF2D78 50%,#FFE500)",t:"墙内开花墙外香",sub:"GLOBAL",lb:"「文化输出急先锋」",d:"国内不温不火，海外突然爆红！",ex:"🌍 曼谷5万票3分钟售罄。国内网友：这团居然是我们的？",nd:"路人盘极高+粉丝适中"},
-{id:"cult",e:"🎸",c:"#FF2D78",g:"linear-gradient(135deg,#FF2D78,#A855F7)",t:"小众封神/地下传奇",sub:"CULT",lb:"「被时代辜负的天才」",d:"商业失败但成了教科书案例。",ex:"🎵 专辑二手5000块。豆瓣9.2。",nd:"粉丝高但资本路人低"},
+{id:"glo",e:"🌏",c:"#A855F7",g:"linear-gradient(135deg,#A855F7,#FF2D78 50%,#FFE500)",t:"国内低调海外爆红",sub:"GLOBAL",lb:"「文化输出急先锋」",d:"国内不温不火，海外突然爆红！",ex:"🌍 曼谷5万票3分钟售罄。国内网友：这团居然是我们的？",nd:"路人盘极高+粉丝适中"},
+{id:"cult",e:"🎸",c:"#FF2D78",g:"linear-gradient(135deg,#FF2D78,#A855F7)",t:"小众封神/地下传奇",sub:"CULT",lb:"「被时代辜负的天才」",d:"商业失败但成了教科书案例。",ex:"🎵 专辑二手5000块。乐评网站评分9.2。",nd:"粉丝高但资本路人低"},
 {id:"crash",e:"🗞️",c:"#FF4444",g:"linear-gradient(135deg,#FF4444,#880000)",t:"塌房塌到地下室",sub:"DISASTER",lb:"「业界毒瘤」",d:"丑闻不断全员塌房。公司被立案调查。",ex:"⚖️ 出狱那天只有一个粉丝来接你——还是来骂你的。",nd:"声誉全面崩盘"},
 {id:"mogul",e:"🎭",c:"#FFE500",g:"linear-gradient(135deg,#FFE500,#FF6B00)",t:"综艺帝国缔造者",sub:"MOGUL",lb:"「内娱综艺之神」",d:"比起音乐你更适合综艺。旗下综艺承包全网流量。",ex:"📺 恋综连三季霸榜。年度广告收入超100个偶像团总和。",nd:"路人盘和资本都高"},
 {id:"phx",e:"🔥",c:"#FF6B00",g:"linear-gradient(135deg,#FF6B00,#CCFF00)",t:"涅槃重生",sub:"PHOENIX",lb:"「打不死的小强」",d:"解散丑闻低谷后奇迹重组。回归曲让全网哭崩。",ex:"🎤 主唱说：「谢谢你们没放弃。」灯海亮了三分钟。",nd:"经历极端波动"},
-{id:"love",e:"💕",c:"#FF2D78",g:"linear-gradient(135deg,#FF2D78,#FFE500)",t:"塌房但成就了爱情",sub:"LOVE",lb:"「偶像圈月老」",d:"团没了但CP居然真在一起了。婚礼直播观看人数比出道演唱会还多。",ex:"💒 热搜#祝福XX#和#气死我了但祝福#并列第一。",nd:"粉丝较低+路人中等"},
+{id:"love",e:"💕",c:"#FF2D78",g:"linear-gradient(135deg,#FF2D78,#FFE500)",t:"制作人的意外恋情",sub:"LOVE",lb:"「制作人的甜蜜人生」",d:"团的热度过去了，但你和团里的他/她却意外走到了一起。恋情公开后粉丝虽然震惊，但纷纷送上祝福。",ex:"💒 你们的恋情登上热搜，评论区最高赞是「制作人和偶像的爱情故事，比任何偶像剧都甜」。",nd:"粉丝较低+路人中等"},
 {id:"vt",e:"🖥️",c:"#A855F7",g:"linear-gradient(135deg,#A855F7,#00F5FF)",t:"转型虚拟偶像帝国",sub:"DIGITAL",lb:"「赛博造物主」",d:"真人做不下去全变虚拟偶像。Vtuber矩阵日入百万。",ex:"🎮 粉丝说：至少他们不会塌房。",nd:"资本路人适中但粉丝低"},
-{id:"teach",e:"🏫",c:"#CCFF00",g:"linear-gradient(135deg,#CCFF00,#A855F7)",t:"偶像培训教父/教母",sub:"ACADEMY",lb:"「造星流水线总工程师」",d:"培训体系被全行业抄作业。偶像学院8万一期期期爆满。",ex:"🎓 你出了本《偶像制造学》京东销量第一。",nd:"三维均衡资本偏高"},
+{id:"teach",e:"🏫",c:"#CCFF00",g:"linear-gradient(135deg,#CCFF00,#A855F7)",t:"偶像培训教父/教母",sub:"ACADEMY",lb:"「造星流水线总工程师」",d:"培训体系被全行业抄作业。偶像学院8万一期期期爆满。",ex:"🎓 你出了本《偶像制造学》电商平台销量第一。",nd:"三维均衡资本偏高"},
 {id:"meme",e:"🃏",c:"#00F5FF",g:"linear-gradient(135deg,#00F5FF,#FFE500)",t:"成为互联网活化石",sub:"MEME LORD",lb:"「互联网考古活化石」",d:"团解散了但梗永远活在互联网上。",ex:"🦴 有大学生毕业论文写《论XX对中国互联网亚文化的影响》。",nd:"路人盘高+粉丝资本低"},
 {id:"debt",e:"💸",c:"#888",g:"linear-gradient(135deg,#666,#333)",t:"负债三千万跑路鹤岗",sub:"BANKRUPT",lb:"「韭菜收割反被割」",d:"投资打水漂。你连夜坐上去鹤岗的绿皮火车。",ex:"🚂 你在鹤岗花3万买了套房。房子从三万涨到了四万。",nd:"资本严重亏损"},
-{id:"jail",e:"🔒",c:"#880000",g:"linear-gradient(135deg,#880000,#440000)",t:"锒铛入狱",sub:"GAME OVER",lb:"「娱乐圈警示录」",d:"偷税漏税+合同诈骗。法院判了你三年半。",ex:"⚖️ 狱友问你以前干嘛的。你说偶像制作人。他说我以前追的就是你家的团！然后揍了你一顿。",nd:"资本极端负数"},
+{id:"jail",e:"🔒",c:"#880000",g:"linear-gradient(135deg,#880000,#440000)",t:"锒铛入狱",sub:"GAME OVER",lb:"「娱乐圈警示录」",d:"经营不善+财务违规。你面临了法律制裁。",ex:"⚖️ 律师说案子还有得打。你坐在办公室里，看着墙上那张出道合影，叹了口气。",nd:"资本极端负数"},
 {id:"homeless",e:"🏚️",c:"#555",g:"linear-gradient(135deg,#555,#222)",t:"睡桥洞的前制作人",sub:"ROCK BOTTOM",lb:"「从云端到桥洞」",d:"负债累累被列为失信被执行人。你在立交桥下搭了个帐篷。",ex:"🌧️ 某天有路人认出你拍了个视频#前偶像制作人现状#。评论第一条「他曾经离天堂那么近」。",nd:"三维全部负数"},
 {id:"fraud",e:"🕵️",c:"#AA0000",g:"linear-gradient(135deg,#AA0000,#550000)",t:"被资本反噬",sub:"BETRAYED",lb:"「资本的弃子」",d:"投资人转移了公司资产。你亲手打造的团和你没关系了。",ex:"📱 你刷到自己的团在别人公司发布会上。弹幕说新老板比之前那个好多了。",nd:"被投资人架空"},
-{id:"monk",e:"🧘",c:"#D4A574",g:"linear-gradient(135deg,#D4A574,#8B6914)",t:"出家/永不归来",sub:"ENLIGHTENED",lb:"「看破红尘的觉醒者」",d:"你突然顿悟了。把公司交给副总去了大理。后来有人在终南山看到你在教和尚唱歌。",ex:"🏔️ 「终南山音乐课」在B站播放量破千万。曾经的成员来看你你只说了「施主随缘」。",nd:"精神觉醒"},
+{id:"monk",e:"🧘",c:"#D4A574",g:"linear-gradient(135deg,#D4A574,#8B6914)",t:"出家/永不归来",sub:"ENLIGHTENED",lb:"「看破红尘的觉醒者」",d:"你突然顿悟了。把公司交给副总去了大理。后来有人在终南山看到你在教和尚唱歌。",ex:"🏔️ 「终南山音乐课」在视频平台播放量破千万。曾经的成员来看你你只说了「施主随缘」。",nd:"精神觉醒"},
 {id:"dark",e:"🕳️",c:"#333",g:"linear-gradient(135deg,#333,#111)",t:"消失在行业里",sub:"FORGOTTEN",lb:"「查无此人」",d:"没有轰轰烈烈的失败也没有东山再起。没人记得你们。",ex:"🌫️ 五年后你在三线城市商场角落开了一家琴行。偶尔有小孩来学钢琴你会想起站在舞台上的日子。",nd:"三维平庸无亮点"},
-{id:"marry",e:"💒",c:"#FF69B4",g:"linear-gradient(135deg,#FF69B4,#FF2D78 50%,#FFE500)",t:"和成员结婚了",sub:"TRUE LOVE",lb:"「制作人变老公/老婆」",d:"你和你亲手培养的成员日久生情了。婚礼当天全网炸裂。",ex:"💍 婚礼上他/她说「谢谢你当初选了我」。热搜第一#制作人和偶像结婚了#，第二#这个瓜我能吃一辈子#。",nd:"羁绊值≥5+三维合理"},
+{id:"marry",e:"💒",c:"#FF69B4",g:"linear-gradient(135deg,#FF69B4,#FF2D78 50%,#FFE500)",t:"和成员结婚了",sub:"TRUE LOVE",lb:"「制作人变老公/老婆」",d:"你和团里的他/她从工作搭档变成了人生伴侣。婚礼当天全网炸裂。",ex:"💍 婚礼上他/她说「谢谢你当初选了我」。热搜第一#制作人和偶像结婚了#，第二#这个瓜我能吃一辈子#。",nd:"羁绊值≥5+三维合理"},
 {id:"politics",e:"🏛️",c:"#4169E1",g:"linear-gradient(135deg,#4169E1,#191970)",t:"跨界从政",sub:"POWER",lb:"「从造星到造福」",d:"你发现组织能力和号召力比搞娱乐更有价值。你为文娱从业者权益发声。",ex:"🎤 你的提案引发全网讨论。前成员给你举灯牌「制作人加油！」",nd:"路人盘极高+三维均衡"},
-{id:"rival",e:"⚡",c:"#FF4500",g:"linear-gradient(135deg,#FF4500,#8B0000)",t:"和对家合并了",sub:"MERGE",lb:"「化敌为友の商业奇才」",d:"打了三年的死对头突然提出合并。粉丝崩溃但股价涨了300%。",ex:"🤝 有粉丝评论「我追了三年的撕逼大戏居然是商战剧本？」",nd:"资本高+路人高"},
+{id:"rival",e:"⚡",c:"#FF4500",g:"linear-gradient(135deg,#FF4500,#8B0000)",t:"和对家合并了",sub:"MERGE",lb:"「化敌为友的商业奇才」",d:"打了三年的死对头突然提出合并。粉丝崩溃但股价涨了300%。",ex:"🤝 有粉丝评论「我追了三年的撕逼大戏居然是商战剧本？」",nd:"资本高+路人高"},
 {id:"anime",e:"🎌",c:"#FF6B81",g:"linear-gradient(135deg,#FF6B81,#A855F7)",t:"被改编成动漫了",sub:"2D LEGEND",lb:"「次元壁破壁人」",d:"你们的出道故事太离奇被买下版权改编成热血番剧。动漫比真人还火。",ex:"🎬 动漫版把你画成天才制作人（比本人好看100倍）。二次元粉比真人粉还多。",nd:"路人盘高+粉丝中等"},
-{id:"scandal_win",e:"🎰",c:"#FFD700",g:"linear-gradient(135deg,#FFD700,#FF6B00)",t:"黑红到底就是红",sub:"DARK HORSE",lb:"「争议即流量の邪神」",d:"越骂越火。你成了流量炼金术师。",ex:"📱 商学院收录了你的方法论叫《骂不死的XX》。你上了TED演讲「被全网骂如何年入过亿」。",nd:"路人极高+粉丝低+资本高"},
+{id:"scandal_win",e:"🎰",c:"#FFD700",g:"linear-gradient(135deg,#FFD700,#FF6B00)",t:"黑红到底就是红",sub:"DARK HORSE",lb:"「争议即流量的邪神」",d:"越骂越火。你成了流量炼金术师。",ex:"📱 商学院收录了你的方法论叫《骂不死的XX》。你上了TED演讲「被全网骂如何年入过亿」。",nd:"路人极高+粉丝低+资本高"},
 {id:"heir",e:"👶",c:"#87CEEB",g:"linear-gradient(135deg,#87CEEB,#4169E1)",t:"二代目传承",sub:"LEGACY",lb:"「偶像界世袭制开创者」",d:"你退休了但你孩子继承了公司。更离谱的是——你孩子和前成员的孩子组了新团比当年还火。",ex:"👨‍👧 你孩子在出道舞台上说「我爸/妈是最伟大的制作人」。你哭得像个傻子。",nd:"粉丝高+资本高"},
 {id:"write",e:"📖",c:"#DEB887",g:"linear-gradient(135deg,#DEB887,#8B4513)",t:"写了本畅销书",sub:"AUTHOR",lb:"「内娱第一笔杆子」",d:"你把这三年写成了《偶像制造局》。卖了500万册。",ex:"📚 Netflix买了改编权找了顶流来演你。你觉得演员比你帅太多了。",nd:"三维中等偏低"},
-{id:"loop",e:"🔄",c:"#9370DB",g:"linear-gradient(135deg,#9370DB,#4B0082)",t:"重新出发",sub:"NEW GAME+",lb:"「永不言弃の造梦师」",d:"第一个团解散了。你哭了一个晚上第二天又开始面试新练习生了。",ex:"🌅 第二个团居然比第一个还火。前成员转发了你的新团MV说「看我们的制作人又赢了」。",nd:"总分中等+经历波动"}
+{id:"loop",e:"🔄",c:"#9370DB",g:"linear-gradient(135deg,#9370DB,#4B0082)",t:"重新出发",sub:"NEW GAME+",lb:"「永不言弃的造梦师」",d:"第一个团解散了。你哭了一个晚上第二天又开始面试新练习生了。",ex:"🌅 第二个团居然比第一个还火。前成员转发了你的新团MV说「看我们的制作人又赢了」。",nd:"总分中等+经历波动"}
 ];
 
 function getRank(total,endingId){
@@ -228,7 +233,7 @@ function getEnd(s){
     if(p>=f&&p>=c){
       if(p>=200)return ENDS[8]; // 综艺帝国
       if(f>=50&&c>=50)return ENDS[21]; // 从政
-      return ENDS[5]; // 墙外香
+      return ENDS[5]; // 海外爆红
     }
     if(c>=150)return ENDS[22]; // 合并
     return ENDS[25]; // 二代目
@@ -246,7 +251,7 @@ function getEnd(s){
     if(c>=90&&f>=40&&p>=40)return ENDS[12]; // 培训教父
     if(c>=80&&p>=80&&f<40)return ENDS[11]; // 虚拟偶像
     if(p>=110&&f<50&&c<50)return ENDS[13]; // 互联网活化石
-    if(f<60&&p>=60&&c>=30)return ENDS[10]; // CP爱情
+    if(f<60&&p>=60&&c>=30)return ENDS[10]; // 恋情线
     if(f>=p&&f>=c)return ENDS[6]; // 小众封神
     if(p>=f&&p>=c)return ENDS[23]; // 改编动漫
     return ENDS[12]; // 培训教父
@@ -259,10 +264,10 @@ function getEnd(s){
     if(c>=80&&f<40)return ENDS[3]; // 带货
     if(c>=60&&p>=60&&f<30)return ENDS[11]; // 虚拟偶像
     if(p>=80&&f<30&&c<30)return ENDS[13]; // 互联网活化石
-    if(f<40&&p>=40&&c>=25)return ENDS[10]; // CP爱情
+    if(f<40&&p>=40&&c>=25)return ENDS[10]; // 恋情线
     if(c>=60&&f>=30&&p>=30)return ENDS[12]; // 培训教父
     if(p>=70&&f>=30)return ENDS[23]; // 改编动漫
-    if(f>=p&&f>=c)return ENDS[10]; // CP爱情
+    if(f>=p&&f>=c)return ENDS[10]; // 恋情线
     if(p>=f&&p>=c)return ENDS[13]; // 活化石
     return ENDS[27]; // 重新出发
   }
@@ -271,7 +276,7 @@ function getEnd(s){
     if(Math.abs(f-p)<=20&&Math.abs(p-c)<=20&&mx<=90)return ENDS[18]; // 出家
     if(mx<=100&&mn>=15)return ENDS[26]; // 写书
     if(mx-mn>=40)return ENDS[27]; // 重新出发
-    if(f>=p&&f>=c)return ENDS[10]; // CP爱情
+    if(f>=p&&f>=c)return ENDS[10]; // 恋情线
     if(p>=f&&p>=c)return ENDS[13]; // 活化石
     return ENDS[26]; // 写书
   }
@@ -520,9 +525,12 @@ function render(){
 
 function renderIntro(app){
   var p=h("div","page intro");
-  p.innerHTML='<div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(204,255,0,.05),transparent 50%);animation:pl 4s ease infinite"></div><div class="ce" style="text-align:center;position:relative;z-index:1"><div style="font-size:15px;letter-spacing:8px;color:var(--ag);font-weight:700;margin-bottom:12px">QQ音乐 × 金牌制作人</div><div style="font-size:13px;letter-spacing:4px;color:var(--ts);margin-bottom:24px">INTERACTIVE IDOL SIMULATOR</div><h1 style="font-size:34px;font-weight:900;line-height:1.15;margin-bottom:10px"><span style="color:var(--ag)">从零开始</span>的<br><span class="gt" style="display:inline-block">偶像企划</span></h1><p style="font-size:14px;color:var(--ts);line-height:1.8;max-width:280px;margin:0 auto 32px">你将以制作人身份，用三年时间<br>亲手打造一个偶像团体。<br><span style="color:var(--ap);font-size:13px">⚠️ 娱乐圈没有后悔药</span></p><button id="startBtn" style="background:var(--ag);color:#000;border:none;padding:13px 40px;border-radius:100px;font-size:16px;font-weight:900;cursor:pointer;letter-spacing:2px;box-shadow:0 0 40px #ccff004d,0 10px 40px #ccff0033;font-family:inherit">开始企划 →</button><div style="margin-top:36px;font-size:12px;color:rgba(255,255,255,.15);letter-spacing:2px;line-height:1.8">12 STAGES · 3 YEARS · 20 EVENTS · 15 ENDINGS</div></div>';
+  p.innerHTML='<div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,rgba(204,255,0,.05),transparent 50%);animation:pl 4s ease infinite"></div><div class="ce" style="text-align:center;position:relative;z-index:1"><div style="font-size:15px;letter-spacing:8px;color:var(--ag);font-weight:700;margin-bottom:12px">QQ音乐 × 金牌制作人</div><div style="font-size:13px;letter-spacing:4px;color:var(--ts);margin-bottom:24px">INTERACTIVE IDOL SIMULATOR</div><h1 style="font-size:34px;font-weight:900;line-height:1.15;margin-bottom:10px"><span style="color:var(--ag)">从零开始</span>的<br><span class="gt" style="display:inline-block">偶像企划</span></h1><p style="font-size:14px;color:var(--ts);line-height:1.8;max-width:280px;margin:0 auto 32px">你将以制作人身份，用三年时间<br>亲手打造一个偶像团体。<br><span style="color:var(--ap);font-size:13px">⚠️ 娱乐圈没有后悔药</span></p><button id="startBtn" style="background:var(--ag);color:#000;border:none;padding:13px 40px;border-radius:100px;font-size:16px;font-weight:900;cursor:pointer;letter-spacing:2px;box-shadow:0 0 40px #ccff004d,0 10px 40px #ccff0033;font-family:inherit">开始企划 →</button><div style="margin-top:20px"><button id="profileBtn" style="background:transparent;color:var(--ts);border:1px solid rgba(255,255,255,.15);padding:8px 20px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📊 我的档案</button></div><div style="margin-top:24px;font-size:12px;color:rgba(255,255,255,.15);letter-spacing:2px;line-height:1.8">12 STAGES · 3 YEARS · 20 EVENTS · 28 ENDINGS</div></div>';
   app.appendChild(p);
-  setTimeout(function(){$("startBtn").onclick=function(){go("genesis");};},100);
+  setTimeout(function(){
+    $("startBtn").onclick=function(){go("genesis");};
+    $("profileBtn").onclick=function(){showProfile();};
+  },100);
 }
 
 function renderGenesis(app){
@@ -530,21 +538,36 @@ function renderGenesis(app){
   if(!G.gender){
     inn.appendChild(renderHeader(1,"企划诞生","选择你的偶像团体类型"));
     var ch=h("div","choices");
-    var b1=makeBtn({e:"🕺",t:"限定男团",d:"刀群最前线，CP粉和唯粉的修罗场",g:"「哥哥们冲！」"},"var(--ac)",function(){G.gender="male";go("genesis");});
+    var b1=makeBtn({e:"🕺",t:"限定男团",d:"刀群最前线，组合粉和唯粉的修罗场",g:"「哥哥们冲！」"},"var(--ac)",function(){G.gender="male";go("genesis");});
     var b2=makeBtn({e:"💃",t:"限定女团",d:"颜值即正义，实力被低估的永恒困境",g:"「姐姐好美好飒！」"},"var(--ap)",function(){G.gender="female";go("genesis");});
     ch.appendChild(b1);ch.appendChild(b2);inn.appendChild(ch);
   }else{
-    inn.innerHTML='<div class="ce" style="text-align:center"><div style="margin-bottom:24px"><div style="display:inline-block;padding:5px 14px;border-radius:100px;background:'+(G.gender==="male"?"rgba(0,245,255,.1)":"rgba(255,45,120,.1)")+';color:'+(G.gender==="male"?"var(--ac)":"var(--ap)")+';font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:18px">'+(G.gender==="male"?"🕺 限定男团":"💃 限定女团")+'</div><h2 style="font-size:26px;font-weight:900;margin-bottom:6px">给你的团取个名字</h2><p style="font-size:14px;color:var(--ts)">一个响亮的名字，是出圈的第一步</p></div><div style="position:relative;margin-bottom:18px"><input id="nameInput" placeholder="输入团名..." maxlength="20" style="width:100%;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;font-size:20px;font-weight:900;color:var(--tp);text-align:center;outline:none;font-family:inherit;animation:bg 3s ease infinite"><div id="nameCount" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--ts)">0/20</div></div><button id="confirmBtn" disabled style="background:rgba(255,255,255,.05);color:var(--ts);border:none;padding:12px 36px;border-radius:100px;font-size:16px;font-weight:900;cursor:not-allowed;letter-spacing:2px;font-family:inherit">确认出道 →</button></div>';
+    inn.innerHTML='<div class="ce" style="text-align:center"><div style="margin-bottom:24px"><div style="display:inline-block;padding:5px 14px;border-radius:100px;background:'+(G.gender==="male"?"rgba(0,245,255,.1)":"rgba(255,45,120,.1)")+';color:'+(G.gender==="male"?"var(--ac)":"var(--ap)")+';font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:18px">'+(G.gender==="male"?"🕺 限定男团":"💃 限定女团")+'</div><h2 style="font-size:26px;font-weight:900;margin-bottom:6px">给你的团取个名字</h2><p style="font-size:14px;color:var(--ts)">一个响亮的名字，是出圈的第一步</p></div><div id="namePool" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px"></div><button id="refreshBtn" style="background:transparent;color:var(--ag);border:1px solid var(--ag);padding:8px 20px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:12px">🎲 换一批</button><br/><button id="confirmBtn" disabled style="background:rgba(255,255,255,.05);color:var(--ts);border:none;padding:12px 36px;border-radius:100px;font-size:16px;font-weight:900;cursor:not-allowed;letter-spacing:2px;font-family:inherit">确认出道 →</button></div>';
     setTimeout(function(){
-      var inp=$("nameInput"),btn=$("confirmBtn"),cnt=$("nameCount");
-      inp.focus();
-      inp.oninput=function(){
-        cnt.textContent=inp.value.length+"/20";
-        if(inp.value.trim()){btn.disabled=false;btn.style.background="var(--ag)";btn.style.color="#000";btn.style.cursor="pointer";btn.style.boxShadow="0 0 30px #ccff004d";}
-        else{btn.disabled=true;btn.style.background="rgba(255,255,255,.05)";btn.style.color="var(--ts)";btn.style.cursor="not-allowed";btn.style.boxShadow="none";}
-      };
-      inp.onkeydown=function(ev){if(ev.key==="Enter"&&inp.value.trim()){G.name=inp.value.trim();go("identity");}};
-      btn.onclick=function(){if(inp.value.trim()){G.name=inp.value.trim();go("identity");}};
+      var pool=$("namePool"),btn=$("confirmBtn"),refresh=$("refreshBtn");
+      var selected=null;
+      function renderPool(){
+        var names=pickNames();
+        pool.innerHTML="";
+        selected=null;
+        btn.disabled=true;btn.style.background="rgba(255,255,255,.05)";btn.style.color="var(--ts)";btn.style.cursor="not-allowed";btn.style.boxShadow="none";
+        names.forEach(function(name){
+          var card=document.createElement("div");
+          card.className="nameCard";
+          card.textContent=name;
+          card.style.cssText="padding:14px 10px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:12px;font-size:15px;font-weight:900;color:var(--tp);text-align:center;cursor:pointer;transition:all .3s;";
+          card.onclick=function(){
+            Array.prototype.forEach.call(pool.children,function(el){el.style.borderColor="rgba(255,255,255,.1)";el.style.background="rgba(255,255,255,.04)";});
+            card.style.borderColor="var(--ag)";card.style.background="rgba(204,255,0,.08)";
+            selected=name;
+            btn.disabled=false;btn.style.background="var(--ag)";btn.style.color="#000";btn.style.cursor="pointer";btn.style.boxShadow="0 0 30px #ccff004d";
+          };
+          pool.appendChild(card);
+        });
+      }
+      renderPool();
+      refresh.onclick=renderPool;
+      btn.onclick=function(){if(selected){G.name=selected;go("identity");}};
     },100);
   }
   p.appendChild(inn);app.appendChild(p);
@@ -633,8 +656,116 @@ function showToast(s){
   setTimeout(function(){t.style.opacity="0";t.style.transition="opacity .5s";setTimeout(function(){t.remove();},500);},1500);
 }
 
+// ===== 存档 / 成就系统 =====
+var SAVE_KEY="idolProducerSave_v1";
+function loadSave(){
+  try{var s=localStorage.getItem(SAVE_KEY);return s?JSON.parse(s):{playCount:0,endings:{},achievements:{}};}
+  catch(e){return{playCount:0,endings:{},achievements:{}};}
+}
+function saveSave(data){try{localStorage.setItem(SAVE_KEY,JSON.stringify(data));}catch(e){}}
+var ACHIEVEMENTS=[
+  {id:"first",e:"🎯",t:"首次通关",d:"完成1局游戏"},
+  {id:"crown",e:"🏆",t:"三冠王",d:"三维数值都≥50"},
+  {id:"bankrupt",e:"💀",t:"彻底破产",d:"资本值到负数"},
+  {id:"love",e:"💒",t:"恋爱大师",d:"触发结婚或爱情结局"},
+  {id:"god",e:"👑",t:"偶像之神",d:"解锁紫微星结局"},
+  {id:"variety",e:"🎭",t:"全员戏精",d:"解锁综艺帝国结局"},
+  {id:"wiki",e:"📚",t:"百科全书",d:"解锁10+种结局"},
+  {id:"legend",e:"🎬",t:"业界传奇",d:"解锁全部28种结局"},
+  {id:"agent",e:"📝",t:"签约经纪人",d:"通关5次"},
+  {id:"master",e:"🏆",t:"金牌制作人",d:"通关20次"}
+];
+function checkAndRecordGame(endingId){
+  var save=loadSave();
+  save.playCount=(save.playCount||0)+1;
+  save.endings=save.endings||{};
+  save.endings[endingId]=(save.endings[endingId]||0)+1;
+  save.achievements=save.achievements||{};
+  var newlyUnlocked=[];
+  function unlock(aid){if(!save.achievements[aid]){save.achievements[aid]=Date.now();newlyUnlocked.push(aid);}}
+  // 各项成就判定
+  unlock("first");
+  var s=G.stats;
+  if(s.f>=50&&s.p>=50&&s.c>=50)unlock("crown");
+  if(s.c<0)unlock("bankrupt");
+  if(endingId==="marry"||endingId==="love")unlock("love");
+  if(endingId==="god")unlock("god");
+  if(endingId==="mogul")unlock("variety");
+  var unlockedEndingsCount=Object.keys(save.endings).length;
+  if(unlockedEndingsCount>=10)unlock("wiki");
+  if(unlockedEndingsCount>=ENDS.length)unlock("legend");
+  if(save.playCount>=5)unlock("agent");
+  if(save.playCount>=20)unlock("master");
+  saveSave(save);
+  return{save:save,newlyUnlocked:newlyUnlocked};
+}
+function showAchievementToast(achievements){
+  if(!achievements||!achievements.length)return;
+  var toast=document.createElement("div");
+  toast.style.cssText="position:fixed;top:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--ay),var(--ao));color:#000;padding:16px 24px;border-radius:18px;font-weight:900;z-index:9999;box-shadow:0 10px 40px rgba(255,229,0,.4);text-align:center;animation:su .5s ease;max-width:320px;width:90%";
+  var inner="<div style='font-size:12px;letter-spacing:3px;margin-bottom:6px'>🎉 解锁新成就 🎉</div>";
+  achievements.forEach(function(aid){
+    var a=ACHIEVEMENTS.filter(function(x){return x.id===aid;})[0];
+    if(a)inner+="<div style='font-size:16px;margin:6px 0;font-weight:900'>"+a.e+" "+a.t+"</div><div style='font-size:11px;opacity:.75'>"+a.d+"</div>";
+  });
+  toast.innerHTML=inner;
+  document.body.appendChild(toast);
+  setTimeout(function(){toast.style.transition="opacity .5s";toast.style.opacity="0";setTimeout(function(){toast.remove();},500);},3800);
+}
+
+function showProfile(){
+  var save=loadSave();
+  var unlockedEndings=Object.keys(save.endings||{});
+  var unlockedAchievements=Object.keys(save.achievements||{});
+  var overlay=document.createElement("div");
+  overlay.style.cssText="position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;padding:30px 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(8px)";
+  var panel=document.createElement("div");
+  panel.style.cssText="max-width:420px;width:100%;color:var(--tp)";
+  // 标题
+  var html='<div style="text-align:center;margin-bottom:20px"><div style="font-size:12px;letter-spacing:5px;color:var(--ag);font-weight:700;margin-bottom:6px">MY PROFILE</div><h2 style="font-size:26px;font-weight:900">🎮 你的制作人生涯</h2></div>';
+  // 核心数据
+  html+='<div style="background:rgba(255,255,255,.04);border-radius:14px;padding:14px 16px;margin-bottom:16px;border:1px solid rgba(255,255,255,.08);line-height:2;font-size:14px">';
+  html+='<div>📅 通关次数：<b style="color:var(--ag)">'+(save.playCount||0)+'</b></div>';
+  html+='<div>🏆 解锁结局：<b style="color:var(--ac)">'+unlockedEndings.length+'</b> / '+ENDS.length+'</div>';
+  html+='<div>🎖️ 获得成就：<b style="color:var(--ay)">'+unlockedAchievements.length+'</b> / '+ACHIEVEMENTS.length+'</div>';
+  html+='</div>';
+  // 成就列表
+  html+='<div style="margin-bottom:14px"><div style="font-size:13px;letter-spacing:3px;color:var(--ag);font-weight:700;margin-bottom:10px">🎖️ 成就</div><div style="display:grid;grid-template-columns:1fr;gap:8px">';
+  ACHIEVEMENTS.forEach(function(a){
+    var unlocked=save.achievements&&save.achievements[a.id];
+    html+='<div style="padding:10px 14px;border-radius:10px;background:'+(unlocked?"rgba(255,229,0,.08)":"rgba(255,255,255,.03)")+';border:1px solid '+(unlocked?"rgba(255,229,0,.3)":"rgba(255,255,255,.06)")+';display:flex;gap:10px;align-items:center"><div style="font-size:22px;'+(unlocked?"":"filter:grayscale(1);opacity:.3")+'">'+a.e+'</div><div style="flex:1"><div style="font-size:14px;font-weight:900;color:'+(unlocked?"var(--ay)":"rgba(255,255,255,.3)")+'">'+a.t+'</div><div style="font-size:11px;color:var(--ts);margin-top:2px">'+a.d+'</div></div>'+(unlocked?'<div style="font-size:18px">✅</div>':'<div style="font-size:14px;color:rgba(255,255,255,.2)">🔒</div>')+'</div>';
+  });
+  html+='</div></div>';
+  // 结局列表
+  html+='<div style="margin-bottom:14px"><div style="font-size:13px;letter-spacing:3px;color:var(--ac);font-weight:700;margin-bottom:10px">🏆 结局收集</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">';
+  ENDS.forEach(function(en){
+    var u=save.endings&&save.endings[en.id];
+    html+='<div style="padding:8px 10px;border-radius:8px;background:'+(u?"rgba(255,255,255,.06)":"rgba(255,255,255,.02)")+';border:1px solid '+(u?en.c+"40":"rgba(255,255,255,.04)")+';font-size:11px;font-weight:'+(u?"700":"400")+';color:'+(u?en.c:"rgba(255,255,255,.2)")+';text-align:center">'+(u?en.e+" "+en.t:"???")+'</div>';
+  });
+  html+='</div></div>';
+  // 关闭按钮
+  html+='<button id="profileClose" style="width:100%;background:var(--ag);color:#000;border:none;padding:14px;border-radius:100px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;margin-top:10px">关闭</button>';
+  // 清除数据按钮
+  html+='<button id="profileClear" style="width:100%;background:transparent;color:var(--ts);border:1px solid rgba(255,255,255,.1);padding:10px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px">🗑️ 清除所有记录</button>';
+  panel.innerHTML=html;
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+  document.getElementById("profileClose").onclick=function(){overlay.remove();};
+  document.getElementById("profileClear").onclick=function(){
+    if(confirm("确定清除所有记录吗？此操作不可恢复")){
+      localStorage.removeItem(SAVE_KEY);
+      overlay.remove();
+      alert("已清除");
+    }
+  };
+}
+
 function renderEnding(app){
   var ed=getEnd(G.stats);var t=G.stats.f+G.stats.p+G.stats.c;
+  // 记录游戏存档+检查成就
+  var gameRecord=checkAndRecordGame(ed.id);
+  var saveData=gameRecord.save;
+  setTimeout(function(){showAchievementToast(gameRecord.newlyUnlocked);},800);
   var rat="F",rc="#666";
   var rank=getRank(t,ed.id);
   if(t>=110){rat="SSS";rc="var(--ay)";}else if(t>=90){rat="SS";rc="var(--ao)";}else if(t>=75){rat="S";rc="var(--ap)";}else if(t>=60){rat="A";rc="var(--ag)";}else if(t>=45){rat="B";rc="var(--ac)";}else if(t>=30){rat="C";rc="var(--au)";}
@@ -646,9 +777,18 @@ function renderEnding(app){
   if(ed.id==="god"){for(var i=0;i<20;i++){confetti+='<div style="position:fixed;left:'+Math.random()*100+'%;top:-5%;width:'+(4+Math.random()*6)+'px;height:'+(4+Math.random()*6)+'px;border-radius:'+(Math.random()>.5?"50%":"2px")+';background:'+["var(--ag)","var(--ap)","var(--ac)","var(--ay)","var(--au)"][i%5]+';animation:cf '+(2+Math.random()*3)+'s linear '+(Math.random()*2)+'s infinite;opacity:.5"></div>';}}
 
   var endsGrid="";
-  ENDS.forEach(function(en){endsGrid+='<span style="font-size:12px;padding:2px 6px;border-radius:5px;background:'+(en.id===ed.id?"rgba(255,255,255,.1)":"rgba(255,255,255,.02)")+';border:1px solid '+(en.id===ed.id?en.c:"rgba(255,255,255,.04)")+';color:'+(en.id===ed.id?en.c:"rgba(255,255,255,.15)")+';font-weight:'+(en.id===ed.id?"700":"400")+'">'+(en.id===ed.id?en.t:"???")+'</span>';});
+  ENDS.forEach(function(en){
+  var isCurrent=en.id===ed.id;
+  var isUnlocked=saveData.endings&&saveData.endings[en.id];
+  var display=isUnlocked?en.t:"???";
+  var textColor=isCurrent?en.c:(isUnlocked?"rgba(255,255,255,.5)":"rgba(255,255,255,.15)");
+  var borderColor=isCurrent?en.c:(isUnlocked?"rgba(255,255,255,.1)":"rgba(255,255,255,.04)");
+  var bgColor=isCurrent?"rgba(255,255,255,.1)":"rgba(255,255,255,.02)";
+  endsGrid+='<span style="font-size:12px;padding:2px 6px;border-radius:5px;background:'+bgColor+';border:1px solid '+borderColor+';color:'+textColor+';font-weight:'+(isCurrent?"700":"400")+'">'+display+'</span>';
+});
+var unlockedCount=Object.keys(saveData.endings||{}).length;
 
-  inn.innerHTML=confetti+'<div style="font-size:12px;letter-spacing:5px;color:'+ed.c+';font-weight:700;margin-bottom:5px">'+ed.sub+' ENDING</div><div style="font-size:56px;margin-bottom:8px">'+ed.e+'</div><h1 style="font-size:30px;font-weight:900;margin-bottom:5px;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+ed.t+'</h1><div style="margin:12px 0;padding:10px 20px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08);display:inline-block"><div style="font-size:12px;color:var(--ts);letter-spacing:2px;margin-bottom:4px">'+(G.gender==="male"?"🕺 YOUR BOY GROUP":"💃 YOUR GIRL GROUP")+'</div><div style="font-size:32px;font-weight:900;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px">'+G.name+'</div></div><div style="margin:10px auto;display:inline-block;padding:6px 16px;border-radius:100px;background:'+ed.c+'15;border:1px solid '+ed.c+'30"><span style="font-size:16px;font-weight:900;color:'+ed.c+'">'+ed.lb+'</span></div><div style="margin:8px auto;display:flex;align-items:center;justify-content:center;gap:10px"><div style="font-size:12px;letter-spacing:2px;color:var(--ts)">PRODUCER RATING</div><div style="font-size:32px;font-weight:900;color:'+rc+';text-shadow:0 0 15px '+rc+'60">'+rat+'</div><div style="font-size:14px;color:var(--ts)">('+t+'万)</div></div><div style="margin:10px auto;padding:12px 16px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);max-width:320px"><div style="font-size:13px;letter-spacing:3px;color:var(--ag);font-weight:700;margin-bottom:6px">🌍 全球偶像制作人排名</div><div style="font-size:26px;font-weight:900;color:var(--ay);margin-bottom:3px">超越了 '+rank.pct+'% 的制作人</div><div style="font-size:14px;color:var(--ts)">你的段位：<span style="color:var(--ag);font-weight:700">'+rank.title+'</span></div><div style="margin-top:6px;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:'+rank.pct+'%;height:100%;background:linear-gradient(90deg,var(--ag),var(--ac));border-radius:3px"></div></div></div><p style="font-size:15px;color:var(--ts);line-height:1.7;margin-bottom:10px">'+ed.d+'</p><div id="statsPlace"></div><div class="ce" style="background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin:10px 0 14px;border:1px solid '+ed.c+'20;text-align:left"><div style="font-size:12px;letter-spacing:2px;color:'+ed.c+';margin-bottom:5px;font-weight:700">后日谈 EPILOGUE</div><p style="font-size:14px;color:var(--ts);line-height:1.7">'+ed.ex+'</p></div><div style="background:rgba(255,255,255,.02);border-radius:11px;padding:8px 12px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)"><div style="font-size:11px;letter-spacing:2px;color:var(--ag);margin-bottom:5px;font-weight:700">🏆 结局收集 1/28</div><div style="display:flex;flex-wrap:wrap;gap:3px;justify-content:center">'+endsGrid+'</div></div><a class="cta" href="https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol" target="_blank" rel="noopener noreferrer">🎵 给你的偶像团队写出道曲</a><div style="display:flex;gap:8px;margin-top:10px"><button id="restartBtn" style="flex:1;background:rgba(255,255,255,.05);color:var(--tp);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🔄 重新企划</button><button id="shareBtn" style="flex:1;background:'+ed.g+';color:#000;border:none;padding:12px;border-radius:100px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit">📤 生成分享图</button></div><div style="margin-top:24px;font-size:11px;color:rgba(255,255,255,.1);letter-spacing:2px">MADE WITH 🤫 BY 嘘掌门</div>';
+  inn.innerHTML=confetti+'<div style="font-size:12px;letter-spacing:5px;color:'+ed.c+';font-weight:700;margin-bottom:5px">'+ed.sub+' ENDING</div><div style="font-size:56px;margin-bottom:8px">'+ed.e+'</div><h1 style="font-size:30px;font-weight:900;margin-bottom:5px;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+ed.t+'</h1><div style="margin:12px 0;padding:10px 20px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08);display:inline-block"><div style="font-size:12px;color:var(--ts);letter-spacing:2px;margin-bottom:4px">'+(G.gender==="male"?"🕺 YOUR BOY GROUP":"💃 YOUR GIRL GROUP")+'</div><div style="font-size:32px;font-weight:900;background:'+ed.g+';-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px">'+G.name+'</div></div><div style="margin:10px auto;display:inline-block;padding:6px 16px;border-radius:100px;background:'+ed.c+'15;border:1px solid '+ed.c+'30"><span style="font-size:16px;font-weight:900;color:'+ed.c+'">'+ed.lb+'</span></div><div style="margin:8px auto;display:flex;align-items:center;justify-content:center;gap:10px"><div style="font-size:12px;letter-spacing:2px;color:var(--ts)">PRODUCER RATING</div><div style="font-size:32px;font-weight:900;color:'+rc+';text-shadow:0 0 15px '+rc+'60">'+rat+'</div><div style="font-size:14px;color:var(--ts)">('+t+'万)</div></div><div style="margin:10px auto;padding:12px 16px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);max-width:320px"><div style="font-size:13px;letter-spacing:3px;color:var(--ag);font-weight:700;margin-bottom:6px">🌍 全球偶像制作人排名</div><div style="font-size:26px;font-weight:900;color:var(--ay);margin-bottom:3px">超越了 '+rank.pct+'% 的制作人</div><div style="font-size:14px;color:var(--ts)">你的段位：<span style="color:var(--ag);font-weight:700">'+rank.title+'</span></div><div style="margin-top:6px;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="width:'+rank.pct+'%;height:100%;background:linear-gradient(90deg,var(--ag),var(--ac));border-radius:3px"></div></div></div><p style="font-size:15px;color:var(--ts);line-height:1.7;margin-bottom:10px">'+ed.d+'</p><div id="statsPlace"></div><div class="ce" style="background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin:10px 0 14px;border:1px solid '+ed.c+'20;text-align:left"><div style="font-size:12px;letter-spacing:2px;color:'+ed.c+';margin-bottom:5px;font-weight:700">后日谈 EPILOGUE</div><p style="font-size:14px;color:var(--ts);line-height:1.7">'+ed.ex+'</p></div><div style="background:rgba(255,255,255,.02);border-radius:11px;padding:8px 12px;margin-bottom:14px;border:1px solid rgba(255,255,255,.05)"><div style="font-size:11px;letter-spacing:2px;color:var(--ag);margin-bottom:5px;font-weight:700">'+("🏆 结局收集 "+unlockedCount+"/"+ENDS.length)+'</div><div style="display:flex;flex-wrap:wrap;gap:3px;justify-content:center">'+endsGrid+'</div></div><a class="cta" href="https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol" target="_blank" rel="noopener noreferrer">🎵 给你的偶像团队写出道曲</a><div style="display:flex;gap:8px;margin-top:10px"><button id="restartBtn" style="flex:1;background:rgba(255,255,255,.05);color:var(--tp);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🔄 重新企划</button><button id="shareBtn" style="flex:1;background:'+ed.g+';color:#000;border:none;padding:12px;border-radius:100px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit">📤 生成分享图</button></div><div style="margin-top:24px;font-size:11px;color:rgba(255,255,255,.1);letter-spacing:2px">MADE WITH 🤫 BY 嘘掌门</div>';
 
   p.appendChild(inn);app.appendChild(p);
   setTimeout(function(){
