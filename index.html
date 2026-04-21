@@ -334,7 +334,15 @@ if(!CanvasRenderingContext2D.prototype.roundRect){
 }
 // Canvas share image generation
 function generateShareImage(ed,rat,total,cb){
-  var W=750,H=1334;
+  var W=750;
+  // 先用隐藏canvas测算描述文字实际占用高度
+  var tmpCv=document.createElement("canvas");
+  var tmpCtx=tmpCv.getContext("2d");
+  tmpCtx.font="20px 'Noto Sans SC',sans-serif";
+  var _lines=wrapText(tmpCtx,ed.d,W-120);
+  var _dy=820+(_lines.length*30); // 描述文字结束位置
+  var _qrY=_dy+40;                 // QR紧跟描述（间距40）
+  var H=_qrY+280+50;               // QR高280 + 底部50(footer20+下边距30)
   var cv=document.createElement("canvas");cv.width=W;cv.height=H;
   var ctx=cv.getContext("2d");
   // Background
@@ -388,13 +396,15 @@ function generateShareImage(ed,rat,total,cb){
   var dy=820;
   lines.forEach(function(line){ctx.fillText(line,W/2,dy);dy+=30;});
   // QR Code area
-  var qrY=Math.max(dy+30,950);
+  var qrY=_qrY;
   ctx.fillStyle="rgba(255,255,255,0.03)";
   ctx.beginPath();ctx.roundRect(W/2-160,qrY,320,280,16);ctx.fill();
   ctx.strokeStyle="rgba(255,255,255,0.08)";ctx.lineWidth=1;
   ctx.beginPath();ctx.roundRect(W/2-160,qrY,320,280,16);ctx.stroke();
-  // Draw QR code using simple pixel pattern (encode URL)
-  drawQR(ctx,W/2-80,qrY+20,160,"https://y.qq.com/n3/venus/pages/ism_event_detail/index.html?event_id=100967&_hidehd=1&_miniplayer=1&adtag=huodong_idol");
+  // 白色底板（防止二维码透明背景问题）
+  ctx.fillStyle="#fff";
+  ctx.fillRect(W/2-80,qrY+20,160,160);
+  // 底部文字先画
   ctx.fillStyle="#CCFF00";ctx.font="bold 16px 'Noto Sans SC',sans-serif";
   ctx.fillText("扫码给你的团写出道曲",W/2,qrY+220);
   ctx.fillStyle="#666";ctx.font="14px 'Noto Sans SC',sans-serif";
@@ -402,7 +412,24 @@ function generateShareImage(ed,rat,total,cb){
   // Bottom
   ctx.fillStyle="rgba(255,255,255,0.1)";ctx.font="12px 'Noto Sans SC',sans-serif";
   ctx.fillText("MADE WITH 🤫 BY 嘘掌门",W/2,H-30);
-  cb(cv.toDataURL("image/png"));
+  // 异步加载真实二维码
+  var qrUrl="https://y.qq.com/viber_pub/idolproducer/index.html?_miniplayer=1";
+  var qrImg=new Image();
+  qrImg.crossOrigin="anonymous";
+  qrImg.onload=function(){
+    ctx.drawImage(qrImg,W/2-80,qrY+20,160,160);
+    cb(cv.toDataURL("image/png"));
+  };
+  qrImg.onerror=function(){
+    // 加载失败时退回文字提示
+    ctx.fillStyle="#000";ctx.font="bold 14px sans-serif";ctx.textAlign="center";
+    ctx.fillText("扫码链接加载失败",W/2,qrY+100);
+    ctx.fillText("请直接访问",W/2,qrY+120);
+    ctx.font="11px sans-serif";
+    ctx.fillText("y.qq.com/viber_pub/idolproducer",W/2,qrY+145);
+    cb(cv.toDataURL("image/png"));
+  };
+  qrImg.src="https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=2&data="+encodeURIComponent(qrUrl);
 }
 function wrapText(ctx,text,maxW){
   var lines=[];var line="";
@@ -414,40 +441,7 @@ function wrapText(ctx,text,maxW){
   if(line)lines.push(line);
   return lines;
 }
-// Simple QR-like pattern (actual QR needs a library, so we draw a styled placeholder + link)
-function drawQR(ctx,x,y,size,url){
-  // We'll use a simple visual QR representation
-  // For real QR, load qrcode.js. Here we draw a branded pattern
-  var s=size;var cs=s/21;
-  ctx.fillStyle="#fff";
-  ctx.fillRect(x,y,s,s);
-  // Draw finder patterns (3 corners)
-  function drawFinder(fx,fy){
-    ctx.fillStyle="#000";ctx.fillRect(fx,fy,cs*7,cs*7);
-    ctx.fillStyle="#fff";ctx.fillRect(fx+cs,fy+cs,cs*5,cs*5);
-    ctx.fillStyle="#000";ctx.fillRect(fx+cs*2,fy+cs*2,cs*3,cs*3);
-  }
-  drawFinder(x,y);drawFinder(x+cs*14,y);drawFinder(x,y+cs*14);
-  // Random data pattern
-  var seed=0;for(var i=0;i<url.length;i++)seed=(seed*31+url.charCodeAt(i))&0xFFFF;
-  for(var row=0;row<21;row++){
-    for(var col=0;col<21;col++){
-      // Skip finder areas
-      if((row<8&&col<8)||(row<8&&col>12)||(row>12&&col<8))continue;
-      seed=(seed*1103515245+12345)&0x7FFFFFFF;
-      if(seed%3===0){
-        ctx.fillStyle="#000";
-        ctx.fillRect(x+col*cs,y+row*cs,cs,cs);
-      }
-    }
-  }
-  // Center logo
-  ctx.fillStyle="#CCFF00";
-  ctx.beginPath();ctx.arc(x+s/2,y+s/2,cs*2.5,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle="#000";ctx.font="bold "+(cs*2.5)+"px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.fillText("♪",x+s/2,y+s/2);
-  ctx.textBaseline="alphabetic";
-}
+// -- helpers --
 function $(id){return document.getElementById(id);}
 function h(tag,cls,html){var el=document.createElement(tag);if(cls)el.className=cls;if(html!==undefined)el.innerHTML=html;return el;}
 
